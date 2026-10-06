@@ -203,7 +203,12 @@ agar bisa dipakai di filter tabel Filament dan widget.
 - Evaluasi keefektifan kerja sama (tabel `evaluasi_kerja_sama`).
 - Laporan PDF rekap untuk pimpinan.
 
-### Fase 3 (bergantung sistem lain)
+### Fase 3 (bergantung sistem lain) — **BELUM DIKERJAKAN**
+
+> Ditunda 2026-10-07: API/sistem lain belum siap. Tidak ada kode Fase 3 di repo.
+> Prasyarat: keputusan arsitektur SSO FKIP Edu (identity provider vs session bersama),
+> sistem Regulasi dan Akreditasi sudah berjalan (alamat/API diketahui), dan definisi
+> operasional IKU 5 dikonfirmasi dari naskah resmi.
 - Login tunggal lewat FKIP Edu (lihat `../fkipedu/README.md`).
 - Tautan ke Sistem Regulasi (`../regulasi/`) dan Akreditasi (`../akreditasi/`).
 - Pelaporan IKU 5 (luaran hasil kerja sama) — tunggu kepastian definisi operasional.
@@ -242,7 +247,10 @@ fase 2 karena memengaruhi skor.
 - [ ] Kumpulkan data kerja sama yang sudah ada ke templat `contoh-data/`
 - [x] Fase 1 — MVP (kriteria selesai §10 terpenuhi; verifikasi pengguna menyusul)
 - [x] Fase 2 (pengingat, kalkulator LAMDIK, evaluasi, PDF rekap)
-- [ ] Deploy & pengujian pengguna
+- [ ] Fase 3 — **belum dikerjakan** (login tunggal FKIP Edu, tautan Regulasi/Akreditasi, IKU 5; menunggu sistem lain)
+- [ ] Deploy & pengujian pengguna — prasyarat: isi `SUPER_ADMIN_PASSWORD`, jalankan `php artisan migrate --seed`,
+      jalankan scheduler (`* * * * * php artisan schedule:run`) agar pengingat jatuh tempo terkirim,
+      isi konfigurasi SMTP (`MAIL_*`) agar surel pengingat terkirim, isi `prodi` dan NDTPS per TS
 
 ## 12. Menyiapkan repo (langkah pertama vibecoding)
 
