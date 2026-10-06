@@ -45,3 +45,9 @@ it('memakai zona waktu dan locale Indonesia', function () {
         ->and(config('app.locale'))->toBe('id')
         ->and(config('database.default'))->toBe('mariadb');
 });
+
+it('menampilkan pesan validasi dalam Bahasa Indonesia', function () {
+    $pesan = validator(['nama' => ''], ['nama' => 'required'])->errors()->first('nama');
+
+    expect($pesan)->toBe('nama wajib diisi.');
+});
