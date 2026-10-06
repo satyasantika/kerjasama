@@ -21,6 +21,8 @@ class MitraResource extends Resource
 {
     protected static ?string $model = Mitra::class;
 
+    protected static ?string $slug = 'mitra';
+
     protected static ?string $modelLabel = 'mitra';
 
     protected static ?string $pluralModelLabel = 'mitra';

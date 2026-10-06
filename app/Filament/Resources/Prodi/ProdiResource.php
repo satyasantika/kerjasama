@@ -20,6 +20,8 @@ class ProdiResource extends Resource
 {
     protected static ?string $model = Prodi::class;
 
+    protected static ?string $slug = 'prodi';
+
     protected static ?string $modelLabel = 'program studi';
 
     protected static ?string $pluralModelLabel = 'program studi';

@@ -3,12 +3,14 @@
 namespace App\Models;
 
 use App\Enums\JenisMitra;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Mitra extends Model
 {
-    use SoftDeletes;
+    /** @use HasFactory<\Database\Factories\MitraFactory> */
+    use HasFactory, SoftDeletes;
 
     protected $table = 'mitra';
 

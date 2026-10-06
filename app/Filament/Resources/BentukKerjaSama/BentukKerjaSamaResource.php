@@ -19,6 +19,8 @@ class BentukKerjaSamaResource extends Resource
 {
     protected static ?string $model = BentukKerjaSama::class;
 
+    protected static ?string $slug = 'bentuk-kerja-sama';
+
     protected static ?string $modelLabel = 'bentuk kerja sama';
 
     protected static ?string $pluralModelLabel = 'bentuk kerja sama';

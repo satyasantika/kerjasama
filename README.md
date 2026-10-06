@@ -227,11 +227,11 @@ fase 2 karena memengaruhi skor.
 
 - [ ] `docker compose up` → aplikasi terbuka di `http://localhost:8019/admin`.
 - [x] `php artisan migrate:fresh --seed` jalan bersih; ada 4 role, 1 super admin, master bentuk kerja sama terisi.
-- [ ] `admin_prodi` tidak bisa mengubah kerja sama yang tidak melibatkan prodinya (uji Policy dengan Pest).
-- [ ] Status kerja sama benar untuk 5 kasus di §7 (uji unit).
+- [x] `admin_prodi` tidak bisa mengubah kerja sama yang tidak melibatkan prodinya (uji Policy dengan Pest).
+- [x] Status kerja sama benar untuk 5 kasus di §7 (uji unit).
 - [ ] Impor CSV contoh → data muncul; impor ulang tidak menggandakan data.
 - [ ] Ekspor Excel menghasilkan 3 lembar dengan kolom §9.
-- [ ] Berkas PDF tidak bisa diunduh tanpa login (uji feature).
+- [x] Berkas PDF tidak bisa diunduh tanpa login (uji feature).
 - [ ] `php artisan test` hijau.
 
 ## 11. Status pengembangan

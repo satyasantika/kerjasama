@@ -103,7 +103,7 @@ it('mitra unik per kombinasi nama dan negara', function () {
         ->assertHasFormErrors(['nama' => 'unique']);
 
     Livewire::test(CreateMitra::class)
-        ->fillForm(['nama' => 'Universitas X', 'jenis' => 'perguruan_tinggi', 'negara' => 'Malaysia'])
+        ->fillForm(['nama' => 'Universitas X', 'jenis' => 'perguruan_tinggi', 'negara' => 'Malaysia', 'status_legal' => 'Terakreditasi'])
         ->call('create')
         ->assertHasNoFormErrors();
 });

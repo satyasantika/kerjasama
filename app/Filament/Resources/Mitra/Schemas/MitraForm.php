@@ -8,6 +8,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Validation\Rules\Unique;
 
@@ -39,7 +40,8 @@ class MitraForm
                         ->maxLength(255),
                     TextInput::make('status_legal')
                         ->label('Status legal')
-                        ->helperText('Akreditasi PT luar negeri atau registrasi badan usaha.')
+                        ->helperText('Akreditasi PT luar negeri atau registrasi badan usaha (wajib bila mitra luar negeri).')
+                        ->required(fn (Get $get): bool => filled($get('negara')) && strcasecmp(trim($get('negara')), 'Indonesia') !== 0)
                         ->maxLength(255),
                     TextInput::make('provinsi')->label('Provinsi')->maxLength(255),
                     TextInput::make('kabupaten_kota')->label('Kabupaten/kota')->maxLength(255),
