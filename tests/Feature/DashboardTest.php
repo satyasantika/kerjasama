@@ -10,7 +10,7 @@ use App\Models\Mitra;
 use App\Models\User;
 use Database\Seeders\RolSeeder;
 use Filament\Facades\Filament;
-use Filament\Pages\Dashboard;
+use App\Filament\Pages\Dashboard;
 use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;

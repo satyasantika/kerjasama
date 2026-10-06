@@ -241,7 +241,7 @@ fase 2 karena memengaruhi skor.
 - [ ] Konfirmasi asumsi bertanda ⚠ (lokasi repo, port, ambang hari, cara hitung LAMDIK)
 - [ ] Kumpulkan data kerja sama yang sudah ada ke templat `contoh-data/`
 - [x] Fase 1 — MVP (kriteria selesai §10 terpenuhi; verifikasi pengguna menyusul)
-- [ ] Fase 2
+- [x] Fase 2 (pengingat, kalkulator LAMDIK, evaluasi, PDF rekap)
 - [ ] Deploy & pengujian pengguna
 
 ## 12. Menyiapkan repo (langkah pertama vibecoding)
