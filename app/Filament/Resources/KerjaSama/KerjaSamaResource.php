@@ -7,6 +7,7 @@ use App\Filament\Resources\KerjaSama\Pages\EditKerjaSama;
 use App\Filament\Resources\KerjaSama\Pages\ListKerjaSama;
 use App\Filament\Resources\KerjaSama\Pages\ViewKerjaSama;
 use App\Filament\Resources\KerjaSama\RelationManagers\AnakRelationManager;
+use App\Filament\Resources\KerjaSama\RelationManagers\EvaluasiRelationManager;
 use App\Filament\Resources\KerjaSama\RelationManagers\RealisasiRelationManager;
 use App\Filament\Resources\KerjaSama\Schemas\KerjaSamaForm;
 use App\Filament\Resources\KerjaSama\Schemas\KerjaSamaInfolist;
@@ -55,7 +56,7 @@ class KerjaSamaResource extends Resource
 
     public static function getRelations(): array
     {
-        return [RealisasiRelationManager::class, AnakRelationManager::class];
+        return [RealisasiRelationManager::class, EvaluasiRelationManager::class, AnakRelationManager::class];
     }
 
     public static function getPages(): array

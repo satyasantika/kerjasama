@@ -79,6 +79,11 @@ class KerjaSama extends Model
         return $this->hasMany(RealisasiKegiatan::class);
     }
 
+    public function evaluasi(): HasMany
+    {
+        return $this->hasMany(EvaluasiKerjaSama::class);
+    }
+
     public function pembuat(): BelongsTo
     {
         return $this->belongsTo(User::class, 'dibuat_oleh');
