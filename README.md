@@ -226,7 +226,7 @@ fase 2 karena memengaruhi skor.
 ## 10. Kriteria selesai MVP
 
 - [ ] `docker compose up` → aplikasi terbuka di `http://localhost:8019/admin`.
-- [ ] `php artisan migrate:fresh --seed` jalan bersih; ada 4 role, 1 super admin, master bentuk kerja sama terisi.
+- [x] `php artisan migrate:fresh --seed` jalan bersih; ada 4 role, 1 super admin, master bentuk kerja sama terisi.
 - [ ] `admin_prodi` tidak bisa mengubah kerja sama yang tidak melibatkan prodinya (uji Policy dengan Pest).
 - [ ] Status kerja sama benar untuk 5 kasus di §7 (uji unit).
 - [ ] Impor CSV contoh → data muncul; impor ulang tidak menggandakan data.
