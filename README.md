@@ -152,7 +152,7 @@ realisasi_kegiatan_prodi (realisasi_kegiatan_id, prodi_id)
 
 berkas_bukti (                      -- lampiran bukti realisasi (laporan, foto, daftar hadir)
   id, realisasi_kegiatan_id FK, nama_berkas, path, jenis ENUM('laporan','daftar_hadir',
-  'foto','surat_tugas','lainnya'), ukuran_kb, timestamps
+  'foto','surat_tugas','lainnya'), ukuran_kb, timestamps, softDeletes
 )
 
 evaluasi_kerja_sama (               -- fase 2; dasar indikator (b) LAMDIK
