@@ -134,6 +134,14 @@ class KerjaSama extends Model
         };
     }
 
+    /** Sedang berlaku = aktif atau akan berakhir (belum kedaluwarsa, tanpa status manual). */
+    public function scopeBerlaku(Builder $query): Builder
+    {
+        return $query->whereNull('status_manual')
+            ->whereDate('tanggal_mulai', '<=', today())
+            ->whereDate('tanggal_berakhir', '>=', today());
+    }
+
     public function scopeAktif(Builder $query): Builder
     {
         return $query->status(StatusKerjaSama::Aktif);
