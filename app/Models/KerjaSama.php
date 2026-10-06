@@ -10,6 +10,7 @@ use App\Enums\StatusManual;
 use App\Enums\TingkatKerjaSama;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -19,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class KerjaSama extends Model
 {
     /** @use HasFactory<\Database\Factories\KerjaSamaFactory> */
-    use HasFactory, SoftDeletes;
+    use HasFactory, HasUuids, SoftDeletes;
 
     protected $table = 'kerja_sama';
 
@@ -99,7 +100,7 @@ class KerjaSama extends Model
         return (int) now()->startOfDay()->diffInDays($this->tanggal_berakhir->copy()->startOfDay(), false);
     }
 
-    public function melibatkanProdi(?int $prodiId): bool
+    public function melibatkanProdi(?string $prodiId): bool
     {
         return $prodiId !== null && $this->prodi()->where('prodi.id', $prodiId)->exists();
     }
@@ -167,7 +168,7 @@ class KerjaSama extends Model
         return $query->status(StatusKerjaSama::BelumBerlaku);
     }
 
-    public function scopeMelibatkanProdi(Builder $query, int $prodiId): Builder
+    public function scopeMelibatkanProdi(Builder $query, string $prodiId): Builder
     {
         return $query->whereHas('prodi', fn (Builder $q) => $q->where('prodi.id', $prodiId));
     }

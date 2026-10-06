@@ -79,6 +79,11 @@ boleh berdiri sendiri tanpa induk.
 Konvensi: nama tabel Bahasa Indonesia **tanpa jamak Inggris** — selalu set `$table`
 di model (Laravel akan menebak `mitras`, `kerja_samas`, dst. kalau tidak).
 
+**Primary key = UUID versi 7** (trait `HasUuids` Laravel 13, berurutan waktu) untuk semua
+tabel di bawah ini (`id` pada skema = `CHAR(36)`/`uuid`, FK memakai `foreignUuid`), termasuk
+`users`. Pengecualian: tabel `roles`/`permissions` Spatie dan tabel infrastruktur Laravel
+(`jobs`, `cache`, `sessions`, dst.) memakai kunci bawaan; `notifications.id` sudah UUID.
+
 ```
 users                     (bawaan Laravel) + prodi_id FK nullable
 roles, permissions, ...   (Spatie)

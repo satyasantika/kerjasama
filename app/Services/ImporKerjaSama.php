@@ -390,7 +390,7 @@ class ImporKerjaSama
         return collect(explode('|', $nilai))->map(fn ($v) => trim($v))->filter()->values()->all();
     }
 
-    /** @return list<int> id berurutan sesuai daftar; gagal bila ada yang tidak ditemukan */
+    /** @return list<string> id berurutan sesuai daftar; gagal bila ada yang tidak ditemukan */
     private function cari(string $model, string $kolom, array $nilai, string $label): array
     {
         $ketemu = $model::whereIn($kolom, $nilai)->pluck('id', $kolom);
@@ -400,7 +400,7 @@ class ImporKerjaSama
             throw new RuntimeException("{$label} tidak ditemukan: ".$hilang->implode(', '));
         }
 
-        return collect($nilai)->map(fn ($n) => (int) $ketemu[$n])->all();
+        return collect($nilai)->map(fn ($n) => (string) $ketemu[$n])->all();
     }
 
     private function nullable(array $baris, string $kunci): ?string

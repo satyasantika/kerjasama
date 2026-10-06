@@ -9,8 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('kerja_sama', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('induk_id')->nullable()->constrained('kerja_sama')->nullOnDelete();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('induk_id')->nullable()->constrained('kerja_sama')->nullOnDelete();
             $table->string('kode_impor')->nullable()->unique();
             $table->enum('jenis_dokumen', ['MoU', 'MoA', 'PKS', 'IA']);
             $table->string('nomor_dokumen_unsil')->nullable();
@@ -32,7 +32,7 @@ return new class extends Migration
             $table->boolean('sudah_dilaporkan_pddikti')->default(false);
             $table->string('berkas_dokumen')->nullable();
             $table->string('berkas_dokumen_asing')->nullable();
-            $table->foreignId('dibuat_oleh')->constrained('users');
+            $table->foreignUuid('dibuat_oleh')->constrained('users');
             $table->timestamps();
             $table->softDeletes();
 
@@ -40,21 +40,21 @@ return new class extends Migration
         });
 
         Schema::create('kerja_sama_mitra', function (Blueprint $table) {
-            $table->foreignId('kerja_sama_id')->constrained('kerja_sama')->cascadeOnDelete();
-            $table->foreignId('mitra_id')->constrained('mitra')->restrictOnDelete();
+            $table->foreignUuid('kerja_sama_id')->constrained('kerja_sama')->cascadeOnDelete();
+            $table->foreignUuid('mitra_id')->constrained('mitra')->restrictOnDelete();
             $table->primary(['kerja_sama_id', 'mitra_id']);
         });
 
         Schema::create('kerja_sama_prodi', function (Blueprint $table) {
-            $table->foreignId('kerja_sama_id')->constrained('kerja_sama')->cascadeOnDelete();
-            $table->foreignId('prodi_id')->constrained('prodi')->restrictOnDelete();
+            $table->foreignUuid('kerja_sama_id')->constrained('kerja_sama')->cascadeOnDelete();
+            $table->foreignUuid('prodi_id')->constrained('prodi')->restrictOnDelete();
             $table->boolean('penginisiasi')->default(false);
             $table->primary(['kerja_sama_id', 'prodi_id']);
         });
 
         Schema::create('kerja_sama_bentuk', function (Blueprint $table) {
-            $table->foreignId('kerja_sama_id')->constrained('kerja_sama')->cascadeOnDelete();
-            $table->foreignId('bentuk_kerja_sama_id')->constrained('bentuk_kerja_sama')->restrictOnDelete();
+            $table->foreignUuid('kerja_sama_id')->constrained('kerja_sama')->cascadeOnDelete();
+            $table->foreignUuid('bentuk_kerja_sama_id')->constrained('bentuk_kerja_sama')->restrictOnDelete();
             $table->primary(['kerja_sama_id', 'bentuk_kerja_sama_id']);
         });
     }

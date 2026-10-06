@@ -19,17 +19,17 @@ trait MenyimpanProdiKerjaSama
 
     protected function simpanProdi(KerjaSama $record, array $state): void
     {
-        $ids = collect($state['prodi_ids'] ?? [])->map(fn ($id) => (int) $id);
+        $ids = collect($state['prodi_ids'] ?? [])->map(fn ($id) => (string) $id);
         $user = auth()->user();
 
         if ($user?->hasRole(Peran::AdminProdi->value) && $user->prodi_id) {
-            $ids->push((int) $user->prodi_id);
+            $ids->push((string) $user->prodi_id);
         }
 
         $ids = $ids->unique()->values();
-        $inisiator = collect($state['prodi_penginisiasi_ids'] ?? [])->map(fn ($id) => (int) $id);
+        $inisiator = collect($state['prodi_penginisiasi_ids'] ?? [])->map(fn ($id) => (string) $id);
 
-        $record->prodi()->sync($ids->mapWithKeys(fn (int $id) => [
+        $record->prodi()->sync($ids->mapWithKeys(fn (string $id) => [
             $id => ['penginisiasi' => $inisiator->contains($id)],
         ])->all());
     }

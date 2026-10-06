@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mitra', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('nama');
             $table->enum('jenis', ['perguruan_tinggi', 'sekolah', 'pemerintah', 'dudi', 'organisasi_profesi', 'lembaga_lain']);
             $table->string('negara')->default('Indonesia');

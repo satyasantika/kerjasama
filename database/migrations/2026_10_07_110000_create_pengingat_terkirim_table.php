@@ -9,8 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pengingat_terkirim', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('kerja_sama_id')->constrained('kerja_sama')->cascadeOnDelete();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('kerja_sama_id')->constrained('kerja_sama')->cascadeOnDelete();
             $table->unsignedSmallInteger('ambang_hari');
             $table->dateTime('dikirim_pada');
             $table->unique(['kerja_sama_id', 'ambang_hari']);

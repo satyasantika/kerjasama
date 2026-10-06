@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('prodi', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->string('kode', 20)->unique();
             $table->string('nama');
             $table->enum('jenjang', ['S1', 'S2', 'S3', 'PPG', 'Profesi']);
@@ -18,8 +18,8 @@ return new class extends Migration
         });
 
         Schema::create('prodi_ndtps', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('prodi_id')->constrained('prodi')->cascadeOnDelete();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('prodi_id')->constrained('prodi')->cascadeOnDelete();
             $table->unsignedSmallInteger('tahun_ts');
             $table->unsignedSmallInteger('ndtps');
             $table->timestamps();
@@ -27,7 +27,7 @@ return new class extends Migration
         });
 
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignId('prodi_id')->nullable()->after('email')->constrained('prodi')->nullOnDelete();
+            $table->foreignUuid('prodi_id')->nullable()->after('email')->constrained('prodi')->nullOnDelete();
         });
     }
 

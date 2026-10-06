@@ -50,7 +50,7 @@ class KerjaSamaTable
                     ->label('Prodi')
                     ->options(fn () => Prodi::orderBy('nama')->pluck('nama', 'id'))
                     ->query(fn (Builder $query, array $data) => filled($data['value'] ?? null)
-                        ? $query->melibatkanProdi((int) $data['value']) : $query),
+                        ? $query->melibatkanProdi($data['value']) : $query),
                 SelectFilter::make('tahun')
                     ->label('Tahun tanda tangan')
                     ->options(fn () => KerjaSama::query()->selectRaw('YEAR(tanggal_tanda_tangan) as t')->distinct()->orderByDesc('t')->pluck('t', 't')->all())

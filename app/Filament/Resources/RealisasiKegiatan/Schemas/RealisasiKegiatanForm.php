@@ -28,7 +28,7 @@ class RealisasiKegiatanForm
                         ->searchable()
                         ->preload()
                         ->required()
-                        ->default(fn () => request()->integer('kerja_sama_id') ?: null)
+                        ->default(fn () => request()->query('kerja_sama_id'))
                         ->columnSpanFull(),
                     TextInput::make('judul_kegiatan')->label('Judul kegiatan')->required()->maxLength(255)->columnSpanFull(),
                     Textarea::make('deskripsi')->label('Deskripsi')->rows(3)->columnSpanFull(),

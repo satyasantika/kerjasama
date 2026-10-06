@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProdiNdtps extends Model
 {
+    use HasUuids;
+
     protected $table = 'prodi_ndtps';
 
     protected $fillable = ['prodi_id', 'tahun_ts', 'ndtps'];
