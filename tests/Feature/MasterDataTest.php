@@ -139,3 +139,20 @@ it('user bisa dikaitkan ke prodi', function () {
 
     expect($user->fresh()->prodi_id)->toBe($prodi->id);
 });
+
+it('seeder prodi berisi 13 prodi, idempoten, dan tidak menimpa perubahan manual', function () {
+    $this->seed(\Database\Seeders\ProdiSeeder::class);
+    Prodi::where('kode', 'PMAT')->update(['nama' => 'Diubah manual']);
+    $this->seed(\Database\Seeders\ProdiSeeder::class);
+
+    expect(Prodi::count())->toBe(13)
+        ->and(Prodi::where('kode', 'PPG')->first()->jenjang->value)->toBe('PPG')
+        ->and(Prodi::where('jenjang', 'S1')->count())->toBe(12)
+        ->and(Prodi::where('kode', 'PMAT')->value('nama'))->toBe('Diubah manual');
+});
+
+it('migrate:fresh --seed menyertakan prodi', function () {
+    $this->seed();
+
+    expect(Prodi::count())->toBe(13);
+});
