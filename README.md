@@ -30,14 +30,14 @@ usaha/industri, dan lembaga lain, dalam dan luar negeri.
 | Panel admin / UI | **Filament 5** (dokumentasi `filamentphp.com/docs/5.x`) |
 | Livewire | **Livewire 4** (dibawa Filament 5) |
 | CSS | Tailwind CSS 4 (bawaan Filament) |
-| Database | **MariaDB 11.4 LTS** (image Docker `mariadb:11.4`, driver Laravel `mariadb`) |
+| Database | **MariaDB** (saat ini MariaDB 10.11 di host WSL, diakses lewat `host.docker.internal`; target produksi 11.4 LTS), driver Laravel `mariadb` |
 | Role & izin | `spatie/laravel-permission` |
-| Ekspor Excel | `maatwebsite/excel` (atau `openspout`, pilih yang kompatibel Laravel 13) |
+| Ekspor Excel | `openspout/openspout` ^4 (dipilih; v5 butuh PHP 8.4) |
 | Notifikasi | Laravel Task Scheduling + Filament database notifications (+ e-mail, fase 2) |
 | Berkas | Laravel Storage disk `local` (privat), unduh lewat route berotorisasi |
 | Repo kode | `~/code/kerjasama` di WSL — **⚠ ASUMSI**, mengikuti pola `alias` |
-| Runtime | Docker, pola sama dengan repo `alias` (container `kerjasama-php`, `kerjasama-nginx`, `kerjasama-mariadb`) |
-| Port lokal | **8019** — **⚠ ASUMSI** (alias = 8018); cek bentrok dengan sistem lain |
+| Runtime | Docker: container `kerjasama-php` dan `kerjasama-nginx` didefinisikan di `~/code/docker-compose.yml` (compose bersama, bukan di repo ini); database di host |
+| Port lokal | **8025** (8019 dipakai `c-eco`) |
 | Bahasa | UI & nama domain (tabel, kolom, model) Bahasa Indonesia |
 | Zona waktu / lokal | `Asia/Jakarta`, `id`, format tanggal `d/m/Y` |
 
@@ -225,14 +225,14 @@ fase 2 karena memengaruhi skor.
 
 ## 10. Kriteria selesai MVP
 
-- [ ] `docker compose up` → aplikasi terbuka di `http://localhost:8019/admin`.
+- [x] Container hidup → aplikasi terbuka di `http://localhost:8025/admin`.
 - [x] `php artisan migrate:fresh --seed` jalan bersih; ada 4 role, 1 super admin, master bentuk kerja sama terisi.
 - [x] `admin_prodi` tidak bisa mengubah kerja sama yang tidak melibatkan prodinya (uji Policy dengan Pest).
 - [x] Status kerja sama benar untuk 5 kasus di §7 (uji unit).
 - [x] Impor CSV contoh → data muncul; impor ulang tidak menggandakan data.
-- [ ] Ekspor Excel menghasilkan 3 lembar dengan kolom §9.
+- [x] Ekspor Excel menghasilkan 3 lembar dengan kolom §9.
 - [x] Berkas PDF tidak bisa diunduh tanpa login (uji feature).
-- [ ] `php artisan test` hijau.
+- [x] `php artisan test` hijau.
 
 ## 11. Status pengembangan
 
@@ -240,7 +240,7 @@ fase 2 karena memengaruhi skor.
 - [x] Desain database (v1, §6)
 - [ ] Konfirmasi asumsi bertanda ⚠ (lokasi repo, port, ambang hari, cara hitung LAMDIK)
 - [ ] Kumpulkan data kerja sama yang sudah ada ke templat `contoh-data/`
-- [ ] Fase 1 — MVP
+- [x] Fase 1 — MVP (kriteria selesai §10 terpenuhi; verifikasi pengguna menyusul)
 - [ ] Fase 2
 - [ ] Deploy & pengujian pengguna
 
