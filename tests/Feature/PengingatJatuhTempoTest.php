@@ -8,6 +8,7 @@ use App\Models\Prodi;
 use App\Models\User;
 use App\Notifications\PengingatJatuhTempo;
 use Database\Seeders\RolSeeder;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Support\Facades\Notification;
 
 beforeEach(function () {
@@ -122,7 +123,7 @@ it('notifikasi memakai kanal database dan surel serta isi yang benar', function 
 });
 
 it('terjadwal harian lewat scheduler', function () {
-    $acara = collect(app(Illuminate\Console\Scheduling\Schedule::class)->events())
+    $acara = collect(app(Schedule::class)->events())
         ->first(fn ($e) => str_contains($e->command, 'kerjasama:kirim-pengingat'));
 
     expect($acara)->not->toBeNull()->and($acara->expression)->toBe('0 7 * * *');
