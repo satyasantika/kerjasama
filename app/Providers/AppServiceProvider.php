@@ -3,9 +3,7 @@
 namespace App\Providers;
 
 use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Livewire\Livewire;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -26,7 +24,8 @@ class AppServiceProvider extends ServiceProvider
         // (mis. https://supportfkip.unsil.ac.id/kerjasama). Permintaan yang
         // sampai ke container tidak membawa prefix path itu, jadi root URL
         // Laravel harus dipaksa mengikuti APP_URL agar route(), url(),
-        // asset(), dan redirect menghasilkan /kerjasama/... bukan /...
+        // asset(), dan skrip Livewire (yang juga memakai helper url())
+        // menghasilkan /kerjasama/... dan bukan /...
         $appUrl = rtrim((string) config('app.url'), '/');
         $subPath = trim((string) parse_url($appUrl, PHP_URL_PATH), '/');
 
@@ -36,16 +35,6 @@ class AppServiceProvider extends ServiceProvider
 
         if (str_starts_with($appUrl, 'https://')) {
             URL::forceScheme('https');
-        }
-
-        // Skrip Livewire dibangun dari rute mentahnya sendiri (tidak lewat
-        // forceRootUrl di atas), jadi prefix subpath harus ditempelkan
-        // langsung ke rute itu di sini, jika tidak <script src> kehilangan
-        // /kerjasama sama sekali.
-        if ($subPath !== '') {
-            Livewire::setScriptRoute(function ($handle) use ($subPath) {
-                return Route::get($subPath.'/livewire/livewire.min.js', $handle);
-            });
         }
     }
 }
