@@ -10,12 +10,12 @@ class KerjaSamaPolicy
 {
     private function kelolaPenuh(User $user): bool
     {
-        return $user->hasAnyRole([Peran::SuperAdmin->value, Peran::AdminFakultas->value]);
+        return $user->hasRole(Peran::AdminFakultas->value);
     }
 
     public function viewAny(User $user): bool
     {
-        return $user->roles()->exists();
+        return $user->mengurusKerjaSama();
     }
 
     public function view(User $user, KerjaSama $kerjaSama): bool

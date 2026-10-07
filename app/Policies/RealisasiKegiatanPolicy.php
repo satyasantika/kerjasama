@@ -11,7 +11,7 @@ class RealisasiKegiatanPolicy
 {
     private function kelolaPenuh(User $user): bool
     {
-        return $user->hasAnyRole([Peran::SuperAdmin->value, Peran::AdminFakultas->value]);
+        return $user->hasRole(Peran::AdminFakultas->value);
     }
 
     private function pengusul(User $user, RealisasiKegiatan $realisasi): bool
@@ -22,7 +22,7 @@ class RealisasiKegiatanPolicy
 
     public function viewAny(User $user): bool
     {
-        return $user->roles()->exists();
+        return $user->mengurusKerjaSama();
     }
 
     public function view(User $user, RealisasiKegiatan $realisasi): bool
@@ -52,7 +52,7 @@ class RealisasiKegiatanPolicy
             && ($this->kelolaPenuh($user) || $this->pengusul($user, $realisasi));
     }
 
-    /** Verifikasi/penolakan hanya oleh admin_fakultas (dan super_admin) atas realisasi yang diajukan. */
+    /** Verifikasi/penolakan hanya oleh admin_fakultas atas realisasi yang diajukan. */
     public function verifikasi(User $user, RealisasiKegiatan $realisasi): bool
     {
         return $this->kelolaPenuh($user)

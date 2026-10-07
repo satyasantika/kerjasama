@@ -27,7 +27,7 @@ function ksTanggal(int $mulaiOffset, int $berakhirOffset, array $extra = []): Ke
     return KerjaSama::factory()->berlaku(today()->addDays($mulaiOffset)->toDateString(), today()->addDays($berakhirOffset)->toDateString())->create($extra);
 }
 
-it('dashboard terbuka untuk semua peran', function (Peran $peran) {
+it('dashboard menampilkan widget kerja sama untuk peran yang mengurus kerja sama', function (Peran $peran) {
     actingAs(User::factory()->create()->assignRole($peran->value));
 
     get('/admin')->assertOk();
@@ -37,7 +37,7 @@ it('dashboard terbuka untuk semua peran', function (Peran $peran) {
         ->assertSeeLivewire(KerjaSamaPerTingkatChart::class)
         ->assertSeeLivewire(KerjaSamaPerJenisMitraChart::class)
         ->assertSeeLivewire(KerjaSamaAkanBerakhirTable::class);
-})->with(Peran::cases());
+})->with([Peran::AdminFakultas, Peran::AdminProdi, Peran::Pimpinan]);
 
 it('kartu menghitung aktif, akan berakhir, dan kedaluwarsa', function () {
     ksTanggal(-100, 400);                                        // aktif

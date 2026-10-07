@@ -11,7 +11,7 @@ class BerkasBuktiPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->roles()->exists();
+        return $user->mengurusKerjaSama();
     }
 
     public function view(User $user, BerkasBukti $berkas): bool

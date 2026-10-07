@@ -16,7 +16,7 @@ class KerjaSamaPerTingkatChart extends ChartWidget
 
     public static function canView(): bool
     {
-        return auth()->user()?->roles()->exists() ?? false;
+        return auth()->user()?->mengurusKerjaSama() ?? false;
     }
 
     protected function getType(): string
