@@ -76,3 +76,15 @@ it('ganti kata sandi ditolak bila kata sandi saat ini salah', function () {
 
     expect(Hash::check('lama-12345', $user->fresh()->password))->toBeTrue();
 });
+
+it('landing menautkan panduan langsung ke index.html agar tidak memicu redirect tanpa subpath', function () {
+    get('/')->assertOk()
+        ->assertSee(url('/panduan/index.html'), false)
+        ->assertDontSee(url('/panduan').'"', false);
+});
+
+it('setiap halaman panduan statis memiliki sakelar tema', function () {
+    foreach (glob(public_path('panduan/*.html')) as $berkas) {
+        expect(file_get_contents($berkas))->toContain('data-sakelar-tema');
+    }
+});

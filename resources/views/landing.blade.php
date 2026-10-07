@@ -148,7 +148,7 @@
             <a href="#fitur">Fitur</a>
             <a href="#masa-berlaku">Masa berlaku</a>
             <a href="#peran">Peran</a>
-            <a href="{{ url('/panduan/') }}">Panduan</a>
+            <a href="{{ url('/panduan/index.html') }}">Panduan</a>
             <a class="tombol utama" href="{{ url('/admin') }}">{{ auth()->check() ? 'Buka dasbor' : 'Masuk' }}</a>
             @include('partials.sakelar-tema')
         </nav>
@@ -165,7 +165,7 @@
                 <p class="lead">Satu tempat untuk menyimpan MoU, MoA, PKS, dan IA bersama mitra, memantau masa berlakunya, mencatat kegiatan yang sudah terlaksana, dan menyiapkan data akreditasi LAMDIK IAPSK 3.0.</p>
                 <div class="aksi">
                     <a class="tombol utama" href="{{ url('/admin') }}">{{ auth()->check() ? 'Buka dasbor' : 'Masuk ke sistem' }} →</a>
-                    <a class="tombol garis" href="{{ url('/panduan/') }}">Baca panduan pengguna</a>
+                    <a class="tombol garis" href="{{ url('/panduan/index.html') }}">Baca panduan pengguna</a>
                 </div>
                 <div class="fakta">
                     <span><b>4</b> jenis dokumen</span>
@@ -324,7 +324,7 @@
             <p>Belum punya akun? Hubungi admin fakultas atau operator TI untuk dibuatkan akun sesuai peran Anda.</p>
             <div class="aksi">
                 <a class="tombol utama" href="{{ url('/admin') }}">{{ auth()->check() ? 'Buka dasbor' : 'Masuk ke sistem' }} →</a>
-                <a class="tombol garis" href="{{ url('/panduan/') }}">Panduan pengguna</a>
+                <a class="tombol garis" href="{{ url('/panduan/index.html') }}">Panduan pengguna</a>
             </div>
         </div>
     </section>
