@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+set -e
+root="$(git rev-parse --show-toplevel)"
+svc="${APP_PHP_SERVICE:-$(basename "$root")-php}"
+# Compose FKIP ada di folder induk (~/code), jadi pakai docker exec langsung.
+if ! docker ps --format '{{.Names}}' | grep -qx "$svc"; then
+  echo "✖ Container $svc belum berjalan. Jalankan: docker compose up -d (di ~/code)"
+  exit 1
+fi
+docker exec "$svc" ./vendor/bin/pint --test
+docker exec "$svc" php artisan test --parallel --stop-on-failure
