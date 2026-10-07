@@ -167,3 +167,59 @@ it('pengguna tidak pernah dapat dihapus lewat policy', function () {
 
     expect($superAdmin->can('delete', penggunaDengan(Peran::Pimpinan)))->toBeFalse();
 });
+
+it('super_admin dapat menyamar sebagai peran kerja sama lalu kembali', function () {
+    $superAdmin = penggunaDengan(Peran::SuperAdmin);
+    $target = penggunaDengan(Peran::AdminProdi, ['prodi_id' => Prodi::factory()->create()->id]);
+    actingAs($superAdmin);
+
+    Livewire::test(ListPengguna::class)
+        ->callTableAction('menyamar', $target)
+        ->assertRedirect();
+
+    expect(auth()->id())->toBe($target->id)
+        ->and(session('penyamar_id'))->toBe($superAdmin->id);
+
+    get('/admin')->assertOk()->assertSee('Anda sedang menyamar sebagai')->assertSee('Kembali ke akun saya');
+
+    $this->post(route('menyamar.akhiri'))->assertRedirect();
+
+    expect(auth()->id())->toBe($superAdmin->id)
+        ->and(session()->has('penyamar_id'))->toBeFalse();
+});
+
+it('penyamaran ditolak untuk diri sendiri, super_admin lain, akun nonaktif, dan bertingkat', function () {
+    $superAdmin = penggunaDengan(Peran::SuperAdmin);
+    $lain = penggunaDengan(Peran::SuperAdmin);
+    $nonaktif = penggunaDengan(Peran::Pimpinan, ['aktif' => false]);
+    $biasa = penggunaDengan(Peran::Pimpinan);
+
+    expect($superAdmin->can('impersonate', $superAdmin))->toBeFalse()
+        ->and($superAdmin->can('impersonate', $lain))->toBeFalse()
+        ->and($superAdmin->can('impersonate', $nonaktif))->toBeFalse()
+        ->and($superAdmin->can('impersonate', $biasa))->toBeTrue();
+
+    session(['penyamar_id' => $superAdmin->id]);
+    expect($superAdmin->can('impersonate', $biasa))->toBeFalse();
+});
+
+it('peran selain super_admin tidak dapat menyamar', function (Peran $peran) {
+    $pelaku = penggunaDengan($peran);
+
+    expect($pelaku->can('impersonate', penggunaDengan(Peran::Pimpinan)))->toBeFalse();
+})->with([Peran::AdminFakultas, Peran::AdminProdi, Peran::Pimpinan]);
+
+it('mengakhiri penyamaran tanpa sesi penyamaran ditolak', function () {
+    actingAs(penggunaDengan(Peran::AdminFakultas));
+
+    $this->post(route('menyamar.akhiri'))->assertForbidden();
+});
+
+it('kembali dari penyamaran keluar bila super_admin asal sudah nonaktif', function () {
+    $asal = penggunaDengan(Peran::SuperAdmin, ['aktif' => false]);
+    actingAs(penggunaDengan(Peran::Pimpinan));
+
+    $this->withSession(['penyamar_id' => $asal->id])->post(route('menyamar.akhiri'))->assertRedirect();
+
+    expect(auth()->check())->toBeFalse();
+});

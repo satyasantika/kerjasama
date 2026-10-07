@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use App\Actions\Pengguna\MulaiMenyamar;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Dashboard;
 use Filament\Http\Middleware\Authenticate;
@@ -31,6 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->login(Login::class)
             ->profile(isSimple: false)
             ->brandName('Kerja Sama FKIP')
+            ->renderHook(PanelsRenderHook::BODY_START, fn () => session()->has(MulaiMenyamar::KUNCI_SESI) ? view('filament.penyamaran.spanduk') : '')
             ->renderHook(PanelsRenderHook::HEAD_END, fn () => view('filament.auth.login-gaya'), scopes: Login::class)
             ->renderHook(PanelsRenderHook::SIMPLE_LAYOUT_START, fn () => view('filament.auth.login-atas'), scopes: Login::class)
             ->renderHook(PanelsRenderHook::AUTH_LOGIN_FORM_AFTER, fn () => view('filament.auth.login-bawah'), scopes: Login::class)
