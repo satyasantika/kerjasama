@@ -36,7 +36,7 @@
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { margin: 0; background: var(--kertas); color: var(--tinta); font: 16px/1.65 var(--sans); -webkit-font-smoothing: antialiased; }
-        img { max-width: 100%; display: block; }
+        img { max-width: 100%; height: auto; display: block; }
         a { color: inherit; }
         .wrap { width: min(1160px, 100% - 48px); margin-inline: auto; }
         .serif { font-family: var(--serif); }
@@ -308,13 +308,6 @@
                     <h3>Staf urusan kerja sama</h3>
                     <p>Mengelola seluruh data, master mitra dan prodi, serta memverifikasi realisasi.</p>
                     <ul><li>CRUD semua data</li><li>Verifikasi realisasi</li><li>Evaluasi keefektifan</li></ul>
-                    <span class="menuju">Buka panduan →</span>
-                </a>
-                <a href="/panduan/super-admin.html">
-                    <span class="lencana merah" style="align-self:flex-start">Super Admin</span>
-                    <h3>Pengembang / operator TI</h3>
-                    <p>Memegang akses penuh, pengguna dan peran, impor data, dan penjadwalan pengingat.</p>
-                    <ul><li>Kelola pengguna &amp; peran</li><li>Impor CSV</li><li>Pemulihan data</li></ul>
                     <span class="menuju">Buka panduan →</span>
                 </a>
             </div>
