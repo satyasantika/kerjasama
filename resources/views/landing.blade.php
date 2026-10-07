@@ -7,32 +7,9 @@
     <meta name="description" content="Pengelolaan dokumen kerja sama (MoU, MoA, PKS, IA) FKIP Universitas Siliwangi: masa berlaku, realisasi kegiatan, verifikasi, dan data akreditasi LAMDIK IAPSK 3.0 dalam satu sistem.">
     <link rel="icon" href="{{ url('/favicon.ico') }}">
     <link rel="stylesheet" href="{{ url('/fonts/filament/filament/inter/index.css') }}">
+    @include('partials.tema-skrip')
+    @include('partials.tema-gaya')
     <style>
-        :root {
-            --kertas: #fbf8f2;
-            --kertas-2: #f3eee3;
-            --tinta: #1c1917;
-            --tinta-2: #57534e;
-            --garis: #e4dccb;
-            --amber: #f59e0b;
-            --amber-tua: #b45309;
-            --amber-muda: #fef3c7;
-            --hijau: #15803d;
-            --merah: #b91c1c;
-            --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
-            --sans: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-        }
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --kertas: #17140f;
-                --kertas-2: #211c14;
-                --tinta: #f5efe3;
-                --tinta-2: #b8ae9c;
-                --garis: #3a3224;
-                --amber-muda: #3a2a08;
-                --amber-tua: #fbbf24;
-            }
-        }
         * { box-sizing: border-box; }
         html { scroll-behavior: smooth; }
         body { margin: 0; background: var(--kertas); color: var(--tinta); font: 16px/1.65 var(--sans); -webkit-font-smoothing: antialiased; }
@@ -47,7 +24,7 @@
         .merek { font-weight: 800; letter-spacing: -.02em; font-size: 18px; text-decoration: none; display: flex; align-items: center; gap: 10px; }
         .merek i { width: 26px; height: 26px; border-radius: 7px; background: var(--amber); display: grid; place-items: center; }
         .merek svg { width: 16px; height: 16px; }
-        nav.menu { display: flex; gap: 24px; margin-left: auto; font-size: 14.5px; font-weight: 500; }
+        nav.menu { display: flex; align-items: center; gap: 24px; margin-left: auto; font-size: 14.5px; font-weight: 500; }
         nav.menu a { text-decoration: none; color: var(--tinta-2); }
         nav.menu a:hover { color: var(--tinta); }
         .tombol { display: inline-flex; align-items: center; gap: 8px; padding: 11px 20px; border-radius: 10px; font-weight: 600; font-size: 15px; text-decoration: none; border: 1.5px solid transparent; transition: transform .15s, box-shadow .15s, background .15s; }
@@ -140,12 +117,12 @@
         .centang svg { width: 22px; height: 22px; color: var(--hijau); margin-top: 2px; }
 
         /* Penutup */
-        .penutup { background: var(--tinta); color: var(--kertas); text-align: center; }
-        .penutup h2 { margin-inline: auto; color: var(--kertas); }
+        .penutup { background: #1c1917; color: #f5efe3; text-align: center; }
+        .penutup h2 { margin-inline: auto; color: #f5efe3; }
         .penutup p { color: #d6d3d1; max-width: 52ch; margin: 0 auto 32px; }
         .penutup .aksi { justify-content: center; }
-        .penutup .tombol.garis { border-color: #78716c; color: var(--kertas); }
-        .penutup .tombol.garis:hover { background: var(--kertas); color: #1c1917; }
+        .penutup .tombol.garis { border-color: #78716c; color: #f5efe3; }
+        .penutup .tombol.garis:hover { background: #f5efe3; color: #1c1917; }
         footer { padding: 36px 0; font-size: 14px; color: var(--tinta-2); border-top: 1px solid var(--garis); }
         footer .wrap { display: flex; flex-wrap: wrap; gap: 16px 32px; justify-content: space-between; }
         footer a { color: var(--tinta-2); }
@@ -173,6 +150,7 @@
             <a href="#peran">Peran</a>
             <a href="{{ url('/panduan/') }}">Panduan</a>
             <a class="tombol utama" href="{{ url('/admin') }}">{{ auth()->check() ? 'Buka dasbor' : 'Masuk' }}</a>
+            @include('partials.sakelar-tema')
         </nav>
     </div>
 </header>
