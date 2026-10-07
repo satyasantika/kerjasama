@@ -5,9 +5,10 @@ namespace App\Models;
 use App\Enums\Dharma;
 use App\Enums\JenisBukti;
 use App\Enums\StatusVerifikasi;
+use Database\Factories\RealisasiKegiatanFactory;
 use DomainException;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -16,7 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class RealisasiKegiatan extends Model
 {
-    /** @use HasFactory<\Database\Factories\RealisasiKegiatanFactory> */
+    /** @use HasFactory<RealisasiKegiatanFactory> */
     use HasFactory, HasUuids, SoftDeletes;
 
     protected $table = 'realisasi_kegiatan';

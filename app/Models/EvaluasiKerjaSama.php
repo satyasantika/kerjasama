@@ -3,14 +3,15 @@
 namespace App\Models;
 
 use App\Enums\RekomendasiEvaluasi;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Database\Factories\EvaluasiKerjaSamaFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class EvaluasiKerjaSama extends Model
 {
-    /** @use HasFactory<\Database\Factories\EvaluasiKerjaSamaFactory> */
+    /** @use HasFactory<EvaluasiKerjaSamaFactory> */
     use HasFactory, HasUuids;
 
     protected $table = 'evaluasi_kerja_sama';

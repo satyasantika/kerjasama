@@ -1,5 +1,6 @@
 <?php
 
+use App\Enums\Dharma;
 use App\Enums\Peran;
 use App\Enums\StatusVerifikasi;
 use App\Filament\Resources\KerjaSama\Pages\ViewKerjaSama;
@@ -202,7 +203,7 @@ it('dharma terisi otomatis dari bentuk kerja sama dan tanggal selesai tidak bole
 
     Livewire::test(CreateRealisasiKegiatan::class)
         ->fillForm(['bentuk_kerja_sama_id' => $bentuk->id])
-        ->assertFormSet(['dharma' => \App\Enums\Dharma::Penelitian])
+        ->assertFormSet(['dharma' => Dharma::Penelitian])
         ->fillForm([
             'kerja_sama_id' => $ks->id, 'judul_kegiatan' => 'X', 'manfaat_bagi_prodi' => 'Y',
             'tanggal_mulai' => '2026-05-01', 'tanggal_selesai' => '2026-04-01',

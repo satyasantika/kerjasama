@@ -5,6 +5,7 @@ use App\Filament\Resources\BentukKerjaSama\Pages\ListBentukKerjaSama;
 use App\Filament\Resources\Mitra\Pages\CreateMitra;
 use App\Filament\Resources\Mitra\Pages\ListMitra;
 use App\Filament\Resources\Prodi\Pages\CreateProdi;
+use App\Filament\Resources\Prodi\Pages\EditProdi;
 use App\Filament\Resources\Prodi\Pages\ListProdi;
 use App\Filament\Resources\Prodi\RelationManagers\NdtpsRelationManager;
 use App\Models\BentukKerjaSama;
@@ -13,6 +14,7 @@ use App\Models\Prodi;
 use App\Models\ProdiNdtps;
 use App\Models\User;
 use Database\Seeders\BentukKerjaSamaSeeder;
+use Database\Seeders\ProdiSeeder;
 use Database\Seeders\RolSeeder;
 use Filament\Actions\Testing\TestAction;
 use Filament\Facades\Filament;
@@ -122,13 +124,13 @@ it('NDTPS unik per prodi dan tahun', function () {
     $prodi = Prodi::create(['kode' => 'PMAT', 'nama' => 'Pendidikan Matematika', 'jenjang' => 'S1']);
     actingAs(userDengan(Peran::AdminFakultas));
 
-    Livewire::test(NdtpsRelationManager::class, ['ownerRecord' => $prodi, 'pageClass' => \App\Filament\Resources\Prodi\Pages\EditProdi::class])
+    Livewire::test(NdtpsRelationManager::class, ['ownerRecord' => $prodi, 'pageClass' => EditProdi::class])
         ->callAction(TestAction::make('create')->table(), ['tahun_ts' => 2025, 'ndtps' => 12])
         ->assertHasNoFormErrors();
 
     expect(ProdiNdtps::where('prodi_id', $prodi->id)->where('tahun_ts', 2025)->value('ndtps'))->toBe(12);
 
-    Livewire::test(NdtpsRelationManager::class, ['ownerRecord' => $prodi, 'pageClass' => \App\Filament\Resources\Prodi\Pages\EditProdi::class])
+    Livewire::test(NdtpsRelationManager::class, ['ownerRecord' => $prodi, 'pageClass' => EditProdi::class])
         ->callAction(TestAction::make('create')->table(), ['tahun_ts' => 2025, 'ndtps' => 10])
         ->assertHasFormErrors(['tahun_ts' => 'unique']);
 });
@@ -141,9 +143,9 @@ it('user bisa dikaitkan ke prodi', function () {
 });
 
 it('seeder prodi berisi 13 prodi, idempoten, dan tidak menimpa perubahan manual', function () {
-    $this->seed(\Database\Seeders\ProdiSeeder::class);
+    $this->seed(ProdiSeeder::class);
     Prodi::where('kode', 'PMAT')->update(['nama' => 'Diubah manual']);
-    $this->seed(\Database\Seeders\ProdiSeeder::class);
+    $this->seed(ProdiSeeder::class);
 
     expect(Prodi::count())->toBe(13)
         ->and(Prodi::where('kode', 'PPG')->first()->jenjang->value)->toBe('PPG')

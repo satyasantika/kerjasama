@@ -6,6 +6,7 @@ use App\Models\Mitra;
 use App\Models\Prodi;
 use App\Models\RealisasiKegiatan;
 use App\Models\User;
+use App\Services\ImporKerjaSama;
 use Database\Seeders\BentukKerjaSamaSeeder;
 use Database\Seeders\RolSeeder;
 use Illuminate\Support\Facades\File;
@@ -88,8 +89,8 @@ it('impor ulang tidak menggandakan data', function () {
 
     $this->artisan('kerjasama:impor', ['folder' => $this->folder])->assertSuccessful();
     $hitung = fn () => [Prodi::count(), Mitra::count(), KerjaSama::count(), RealisasiKegiatan::count(),
-        \DB::table('kerja_sama_prodi')->count(), \DB::table('kerja_sama_mitra')->count(), \DB::table('kerja_sama_bentuk')->count(),
-        \DB::table('realisasi_kegiatan_prodi')->count()];
+        DB::table('kerja_sama_prodi')->count(), DB::table('kerja_sama_mitra')->count(), DB::table('kerja_sama_bentuk')->count(),
+        DB::table('realisasi_kegiatan_prodi')->count()];
     $pertama = $hitung();
 
     $this->artisan('kerjasama:impor', ['folder' => $this->folder])->assertSuccessful();
@@ -136,7 +137,7 @@ CSV);
 it('mitra luar negeri tanpa status legal ditolak', function () {
     File::put($this->folder.'/mitra.csv', "nama,jenis,negara,status_legal\nUniv Asing,perguruan_tinggi,Jepang,\n");
 
-    $hasil = (new \App\Services\ImporKerjaSama($this->folder, User::first()))->jalankan();
+    $hasil = (new ImporKerjaSama($this->folder, User::first()))->jalankan();
 
     expect(Mitra::where('nama', 'Univ Asing')->exists())->toBeFalse()
         ->and(implode(' ', $hasil['galat']))->toContain('status legal');

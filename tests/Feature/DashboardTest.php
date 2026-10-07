@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\Peran;
+use App\Filament\Pages\Dashboard;
 use App\Filament\Widgets\KerjaSamaAkanBerakhirTable;
 use App\Filament\Widgets\KerjaSamaPerJenisMitraChart;
 use App\Filament\Widgets\KerjaSamaPerTingkatChart;
@@ -10,7 +11,6 @@ use App\Models\Mitra;
 use App\Models\User;
 use Database\Seeders\RolSeeder;
 use Filament\Facades\Filament;
-use App\Filament\Pages\Dashboard;
 use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;

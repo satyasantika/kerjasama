@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Mitra\Tables;
 
 use App\Enums\JenisMitra;
+use App\Models\Mitra;
 use Filament\Actions\EditAction;
 use Filament\Actions\RestoreAction;
 use Filament\Tables\Columns\TextColumn;
@@ -26,7 +27,7 @@ class MitraTable
             ->filters([
                 SelectFilter::make('jenis')->label('Jenis')->options(JenisMitra::class),
                 SelectFilter::make('negara')->label('Negara')
-                    ->options(fn () => \App\Models\Mitra::query()->distinct()->orderBy('negara')->pluck('negara', 'negara')->all()),
+                    ->options(fn () => Mitra::query()->distinct()->orderBy('negara')->pluck('negara', 'negara')->all()),
                 TrashedFilter::make()->label('Data terhapus'),
             ])
             ->recordActions([

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Pages;
 
+use App\Models\EvaluasiKerjaSama;
 use App\Models\Prodi;
 use App\Services\RekapKerjaSamaProdi;
 use App\Services\SkorKerjaSamaLamdik;
@@ -91,7 +92,7 @@ class SimulasiSkorLamdik extends Page
                 Section::make('Indikator (b) — keefektifan')
                     ->schema([
                         Select::make('skor_b')->label('Skor (b)')
-                            ->options(\App\Models\EvaluasiKerjaSama::DESKRIPTOR)
+                            ->options(EvaluasiKerjaSama::DESKRIPTOR)
                             ->required()->live()
                             ->afterStateUpdated(fn () => $this->hitung())
                             ->helperText('Terisi dari rata-rata evaluasi kerja sama bila ada (dibulatkan ke skor terdekat); dapat diubah.'),

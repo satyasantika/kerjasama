@@ -12,12 +12,16 @@ class SkorKerjaSamaLamdik
 {
     /** Bobot jenis kerja sama untuk RK. */
     public const BOBOT_PENDIDIKAN = 3;
+
     public const BOBOT_PENELITIAN = 2;
+
     public const BOBOT_PKM = 1;
 
     /** Faktor tingkat: a (internasional), b (nasional), c (wilayah/lokal). */
     public const FAKTOR_INTERNASIONAL = 2;
+
     public const FAKTOR_NASIONAL = 6;
+
     public const FAKTOR_LOKAL = 9;
 
     /**

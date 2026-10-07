@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\RealisasiKegiatan\RelationManagers;
 
 use App\Enums\JenisBukti;
+use App\Models\BerkasBukti;
 use Filament\Actions\Action;
 use Filament\Actions\CreateAction;
 use Filament\Actions\DeleteAction;
@@ -79,7 +80,7 @@ class BerkasBuktiRelationManager extends RelationManager
 
     protected function canCreate(): bool
     {
-        return Gate::allows('create', \App\Models\BerkasBukti::class)
+        return Gate::allows('create', BerkasBukti::class)
             && Gate::allows('update', $this->getOwnerRecord());
     }
 

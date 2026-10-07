@@ -3,7 +3,6 @@
 namespace App\Filament\Resources\Mitra\Schemas;
 
 use App\Enums\JenisMitra;
-use App\Models\Mitra;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;

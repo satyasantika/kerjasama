@@ -1,9 +1,19 @@
 <?php
 
 use App\Enums\Peran;
+use App\Models\BentukKerjaSama;
+use App\Models\BerkasBukti;
+use App\Models\EvaluasiKerjaSama;
+use App\Models\KerjaSama;
+use App\Models\Mitra;
+use App\Models\PengingatTerkirim;
+use App\Models\Prodi;
+use App\Models\ProdiNdtps;
+use App\Models\RealisasiKegiatan;
 use App\Models\User;
 use Database\Seeders\RolSeeder;
 use Database\Seeders\SuperAdminSeeder;
+use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
 
 beforeEach(fn () => $this->seed(RolSeeder::class));
@@ -53,29 +63,29 @@ it('menampilkan pesan validasi dalam Bahasa Indonesia', function () {
 });
 
 it('semua tabel domain memakai UUID versi 7 sebagai primary key', function () {
-    $ks = \App\Models\KerjaSama::factory()->create();
+    $ks = KerjaSama::factory()->create();
     $baris = [
         User::factory()->create(),
-        \App\Models\Prodi::factory()->create(),
-        \App\Models\ProdiNdtps::create(['prodi_id' => \App\Models\Prodi::factory()->create()->id, 'tahun_ts' => 2025, 'ndtps' => 5]),
-        \App\Models\Mitra::factory()->create(),
-        \App\Models\BentukKerjaSama::create(['kode' => 'X-1', 'nama' => 'X', 'bidang' => 'akademik', 'ruang' => 'antar_pt', 'pasal_rujukan' => '-']),
+        Prodi::factory()->create(),
+        ProdiNdtps::create(['prodi_id' => Prodi::factory()->create()->id, 'tahun_ts' => 2025, 'ndtps' => 5]),
+        Mitra::factory()->create(),
+        BentukKerjaSama::create(['kode' => 'X-1', 'nama' => 'X', 'bidang' => 'akademik', 'ruang' => 'antar_pt', 'pasal_rujukan' => '-']),
         $ks,
-        \App\Models\RealisasiKegiatan::factory()->create(['kerja_sama_id' => $ks->id]),
-        \App\Models\BerkasBukti::factory()->create(),
-        \App\Models\EvaluasiKerjaSama::factory()->create(),
-        \App\Models\PengingatTerkirim::create(['kerja_sama_id' => $ks->id, 'ambang_hari' => 30, 'dikirim_pada' => now()]),
+        RealisasiKegiatan::factory()->create(['kerja_sama_id' => $ks->id]),
+        BerkasBukti::factory()->create(),
+        EvaluasiKerjaSama::factory()->create(),
+        PengingatTerkirim::create(['kerja_sama_id' => $ks->id, 'ambang_hari' => 30, 'dikirim_pada' => now()]),
     ];
 
     foreach ($baris as $model) {
-        expect(\Illuminate\Support\Str::isUuid($model->getKey()))->toBeTrue(class_basename($model).' bukan UUID')
+        expect(Str::isUuid($model->getKey()))->toBeTrue(class_basename($model).' bukan UUID')
             ->and($model->getKey()[14])->toBe('7', class_basename($model).' bukan UUID versi 7');
     }
 
     // UUIDv7 berurutan waktu: yang dibuat belakangan tidak lebih kecil
-    $a = \App\Models\Mitra::factory()->create();
+    $a = Mitra::factory()->create();
     usleep(2000);
-    $b = \App\Models\Mitra::factory()->create();
+    $b = Mitra::factory()->create();
 
     expect($b->id > $a->id)->toBeTrue();
 });

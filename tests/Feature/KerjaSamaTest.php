@@ -6,13 +6,13 @@ use App\Filament\Resources\KerjaSama\Pages\CreateKerjaSama;
 use App\Filament\Resources\KerjaSama\Pages\EditKerjaSama;
 use App\Filament\Resources\KerjaSama\Pages\ListKerjaSama;
 use App\Filament\Resources\KerjaSama\Pages\ViewKerjaSama;
+use App\Filament\Resources\Mitra\Pages\CreateMitra;
 use App\Models\KerjaSama;
 use App\Models\Mitra;
 use App\Models\Prodi;
 use App\Models\User;
 use Database\Seeders\RolSeeder;
 use Filament\Facades\Filament;
-use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Livewire;
 
@@ -257,7 +257,7 @@ it('dokumen induk dan turunan saling terhubung', function () {
 it('mitra asing wajib mengisi status legal', function () {
     actingAs(peranUser(Peran::AdminFakultas));
 
-    Livewire::test(\App\Filament\Resources\Mitra\Pages\CreateMitra::class)
+    Livewire::test(CreateMitra::class)
         ->fillForm(['nama' => 'Univ Z', 'jenis' => 'perguruan_tinggi', 'negara' => 'Malaysia'])
         ->call('create')
         ->assertHasFormErrors(['status_legal' => 'required']);
