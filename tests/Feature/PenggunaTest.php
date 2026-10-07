@@ -12,9 +12,12 @@ use App\Models\Prodi;
 use App\Models\User;
 use Database\Seeders\RolSeeder;
 use Filament\Facades\Filament;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use Livewire\Livewire;
+use OpenSpout\Common\Entity\Row;
+use OpenSpout\Writer\XLSX\Writer;
 
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\get;
@@ -222,4 +225,89 @@ it('kembali dari penyamaran keluar bila super_admin asal sudah nonaktif', functi
     $this->withSession(['penyamar_id' => $asal->id])->post(route('menyamar.akhiri'))->assertRedirect();
 
     expect(auth()->check())->toBeFalse();
+});
+
+function berkasImpor(string $isi, string $nama = 'pengguna.csv'): UploadedFile
+{
+    return UploadedFile::fake()->createWithContent($nama, $isi);
+}
+
+it('impor massal membuat pengguna, mengaitkan prodi, dan membangkitkan kata sandi kosong', function () {
+    $prodi = Prodi::factory()->create(['kode' => 'PMAT']);
+    actingAs(penggunaDengan(Peran::SuperAdmin));
+
+    $csv = "nama,email,peran,kode_prodi,kata_sandi\n"
+        ."CONTOH,contoh@x.test,admin_prodi,PMAT,\n"
+        ."Ani,ani@unsil.test,admin_prodi,pmat,\n"
+        ."Budi,budi@unsil.test,Admin Fakultas,,sandi-budi-1\n"
+        ."Citra,citra@unsil.test,pimpinan,,\n";
+
+    Livewire::test(ListPengguna::class)
+        ->callAction('imporPengguna', ['berkas' => berkasImpor($csv)])
+        ->assertHasNoActionErrors()
+        ->assertFileDownloaded();
+
+    $ani = User::firstWhere('email', 'ani@unsil.test');
+    $budi = User::firstWhere('email', 'budi@unsil.test');
+
+    expect(User::whereIn('email', ['ani@unsil.test', 'budi@unsil.test', 'citra@unsil.test'])->count())->toBe(3)
+        ->and(User::where('email', 'contoh@x.test')->exists())->toBeFalse()
+        ->and($ani->hasRole(Peran::AdminProdi->value))->toBeTrue()
+        ->and($ani->prodi_id)->toBe($prodi->id)
+        ->and($ani->aktif)->toBeTrue()
+        ->and($budi->hasRole(Peran::AdminFakultas->value))->toBeTrue()
+        ->and(Hash::check('sandi-budi-1', $budi->password))->toBeTrue();
+});
+
+it('impor massal membatalkan seluruh berkas bila ada baris tidak sah', function () {
+    Prodi::factory()->create(['kode' => 'PMAT']);
+    penggunaDengan(Peran::Pimpinan, ['email' => 'ada@unsil.test']);
+    actingAs(penggunaDengan(Peran::SuperAdmin));
+    $sebelum = User::count();
+
+    $csv = "nama,email,peran,kode_prodi,kata_sandi\n"
+        ."Baik,baik@unsil.test,pimpinan,,\n"
+        ."Dobel,ada@unsil.test,pimpinan,,\n"
+        ."TanpaProdi,tp@unsil.test,admin_prodi,,\n"
+        ."SuperBaru,sb@unsil.test,super_admin,,\n"
+        ."Pendek,pd@unsil.test,pimpinan,,abc\n"
+        ."Kembar,baik@unsil.test,pimpinan,,\n";
+
+    Livewire::test(ListPengguna::class)
+        ->callAction('imporPengguna', ['berkas' => berkasImpor($csv)])
+        ->assertNotified('Impor dibatalkan: tidak ada akun yang dibuat');
+
+    expect(User::count())->toBe($sebelum);
+});
+
+it('impor massal menolak berkas tanpa kolom wajib dan peran selain super_admin tidak melihat aksinya', function () {
+    actingAs(penggunaDengan(Peran::SuperAdmin));
+
+    Livewire::test(ListPengguna::class)
+        ->callAction('imporPengguna', ['berkas' => berkasImpor("a,b\n1,2\n")])
+        ->assertNotified('Impor gagal');
+
+    actingAs(penggunaDengan(Peran::AdminFakultas));
+    Livewire::test(ListPengguna::class)->assertForbidden();
+});
+
+it('impor massal membaca CSV berpemisah titik koma dan XLSX', function () {
+    actingAs(penggunaDengan(Peran::SuperAdmin));
+
+    Livewire::test(ListPengguna::class)
+        ->callAction('imporPengguna', ['berkas' => berkasImpor("nama;email;peran;kode_prodi;kata_sandi\nDedi;dedi@unsil.test;pimpinan;;\n")])
+        ->assertFileDownloaded();
+
+    $path = tempnam(sys_get_temp_dir(), 'x').'.xlsx';
+    $w = new Writer;
+    $w->openToFile($path);
+    $w->addRow(Row::fromValues(['nama', 'email', 'peran', 'kode_prodi', 'kata_sandi']));
+    $w->addRow(Row::fromValues(['Eka', 'eka@unsil.test', 'admin_fakultas', '', '']));
+    $w->close();
+
+    Livewire::test(ListPengguna::class)
+        ->callAction('imporPengguna', ['berkas' => berkasImpor(file_get_contents($path), 'pengguna.xlsx')])
+        ->assertFileDownloaded();
+
+    expect(User::whereIn('email', ['dedi@unsil.test', 'eka@unsil.test'])->count())->toBe(2);
 });
