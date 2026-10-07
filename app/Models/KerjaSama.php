@@ -31,7 +31,7 @@ class KerjaSama extends Model
         'nama_penandatangan_unsil', 'nama_penandatangan_mitra', 'jabatan_penandatangan_mitra',
         'tanggal_tanda_tangan', 'tanggal_mulai', 'tanggal_berakhir', 'status_manual',
         'memuat_hki_aset', 'perlu_persetujuan_dirjen', 'sudah_dilaporkan_pddikti',
-        'berkas_dokumen', 'berkas_dokumen_asing', 'dibuat_oleh',
+        'berkas_dokumen', 'berkas_dokumen_asing', 'tautan_dokumen', 'tautan_dokumen_asing', 'dibuat_oleh',
     ];
 
     protected function casts(): array

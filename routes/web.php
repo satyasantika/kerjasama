@@ -4,6 +4,7 @@ use App\Http\Controllers\AkhiriMenyamarController;
 use App\Http\Controllers\BerkasBuktiController;
 use App\Http\Controllers\BerkasKerjaSamaController;
 use App\Http\Controllers\LaporanPimpinanController;
+use App\Http\Controllers\TautanBerkasController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'landing')->name('beranda');
@@ -16,6 +17,12 @@ Route::middleware('auth')->group(function () {
         ->name('kerja-sama.berkas');
 
     Route::get('/laporan/rekap-pimpinan', LaporanPimpinanController::class)->name('laporan.rekap-pimpinan');
+
+    Route::get('/kerja-sama/{kerjaSama}/tautan/{jenis}', [TautanBerkasController::class, 'kerjaSama'])
+        ->whereIn('jenis', ['dokumen', 'asing'])
+        ->name('tautan.kerja-sama');
+
+    Route::get('/bukti/{berkasBukti}/tautan', [TautanBerkasController::class, 'bukti'])->name('tautan.bukti');
 
     Route::get('/bukti/{berkasBukti}', BerkasBuktiController::class)->name('bukti.unduh');
 });

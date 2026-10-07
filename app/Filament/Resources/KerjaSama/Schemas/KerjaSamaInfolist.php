@@ -51,6 +51,18 @@ class KerjaSamaInfolist
             Section::make('Berkas')
                 ->schema([
                     Actions::make([
+                        Action::make('bukaTautanDokumen')
+                            ->label('Buka dokumen perjanjian (Google Drive)')
+                            ->icon('heroicon-o-arrow-top-right-on-square')
+                            ->url(fn (KerjaSama $record) => route('tautan.kerja-sama', [$record, 'dokumen']))
+                            ->openUrlInNewTab()
+                            ->visible(fn (KerjaSama $record) => filled($record->tautan_dokumen)),
+                        Action::make('bukaTautanAsing')
+                            ->label('Buka versi bahasa asing (Google Drive)')
+                            ->icon('heroicon-o-arrow-top-right-on-square')
+                            ->url(fn (KerjaSama $record) => route('tautan.kerja-sama', [$record, 'asing']))
+                            ->openUrlInNewTab()
+                            ->visible(fn (KerjaSama $record) => filled($record->tautan_dokumen_asing)),
                         Action::make('unduhDokumen')
                             ->label('Unduh dokumen perjanjian')
                             ->icon('heroicon-o-arrow-down-tray')
@@ -63,7 +75,8 @@ class KerjaSamaInfolist
                             ->visible(fn (KerjaSama $record) => filled($record->berkas_dokumen_asing)),
                     ]),
                     TextEntry::make('berkas_dokumen')->hiddenLabel()->default('Belum ada berkas.')
-                        ->visible(fn (KerjaSama $record) => blank($record->berkas_dokumen) && blank($record->berkas_dokumen_asing)),
+                        ->visible(fn (KerjaSama $record) => blank($record->berkas_dokumen) && blank($record->berkas_dokumen_asing)
+                            && blank($record->tautan_dokumen) && blank($record->tautan_dokumen_asing)),
                 ]),
         ]);
     }

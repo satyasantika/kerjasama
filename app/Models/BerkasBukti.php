@@ -18,7 +18,7 @@ class BerkasBukti extends Model
 
     protected $table = 'berkas_bukti';
 
-    protected $fillable = ['realisasi_kegiatan_id', 'nama_berkas', 'path', 'jenis', 'ukuran_kb'];
+    protected $fillable = ['realisasi_kegiatan_id', 'nama_berkas', 'path', 'tautan', 'jenis', 'ukuran_kb'];
 
     protected static function booted(): void
     {
