@@ -172,7 +172,7 @@
             <a href="#masa-berlaku">Masa berlaku</a>
             <a href="#peran">Peran</a>
             <a href="/panduan/">Panduan</a>
-            <a class="tombol utama" href="/admin">{{ auth()->check() ? 'Buka dasbor' : 'Masuk' }}</a>
+            <a class="tombol utama" href="{{ url('/admin') }}">{{ auth()->check() ? 'Buka dasbor' : 'Masuk' }}</a>
         </nav>
     </div>
 </header>
@@ -186,7 +186,7 @@
                 <h1>Setiap perjanjian, <em>tercatat</em> dan terpantau.</h1>
                 <p class="lead">Satu tempat untuk menyimpan MoU, MoA, PKS, dan IA bersama mitra, memantau masa berlakunya, mencatat kegiatan yang sudah terlaksana, dan menyiapkan data akreditasi LAMDIK IAPSK 3.0.</p>
                 <div class="aksi">
-                    <a class="tombol utama" href="/admin">{{ auth()->check() ? 'Buka dasbor' : 'Masuk ke sistem' }} →</a>
+                    <a class="tombol utama" href="{{ url('/admin') }}">{{ auth()->check() ? 'Buka dasbor' : 'Masuk ke sistem' }} →</a>
                     <a class="tombol garis" href="/panduan/">Baca panduan pengguna</a>
                 </div>
                 <div class="fakta">
@@ -345,7 +345,7 @@
             <h2>Mulai dari panduan, lanjut ke sistem</h2>
             <p>Belum punya akun? Hubungi admin fakultas atau operator TI untuk dibuatkan akun sesuai peran Anda.</p>
             <div class="aksi">
-                <a class="tombol utama" href="/admin">{{ auth()->check() ? 'Buka dasbor' : 'Masuk ke sistem' }} →</a>
+                <a class="tombol utama" href="{{ url('/admin') }}">{{ auth()->check() ? 'Buka dasbor' : 'Masuk ke sistem' }} →</a>
                 <a class="tombol garis" href="/panduan/">Panduan pengguna</a>
             </div>
         </div>
