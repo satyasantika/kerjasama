@@ -1,5 +1,6 @@
 /* Panduan pengguna Sistem Kerja Sama FKIP — gaya bersama semua halaman panduan */
 :root {
+    color-scheme: light;
     --kertas: #fbf8f2;
     --kertas-2: #f3eee3;
     --putih: #ffffff;
@@ -21,8 +22,9 @@
     --sans: "Inter Variable", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
     --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 }
-@media (prefers-color-scheme: dark) {
-    :root {
+@media all {
+    :root.dark {
+        color-scheme: dark;
         --kertas: #17140f;
         --kertas-2: #211c14;
         --putih: #1d1912;
@@ -197,3 +199,12 @@ footer.kaki .dalam { width: min(1240px, 100% - 32px); margin-inline: auto; displ
     details > summary { list-style: none; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } html { scroll-behavior: auto; } }
+
+/* Sakelar tema (kunci localStorage 'theme' dibagi dengan landing dan panel) */
+.sakelar-tema { display: inline-grid; place-items: center; width: 36px; height: 36px; padding: 0; margin-left: 0; border-radius: 10px; border: 1.5px solid var(--garis); background: transparent; color: var(--tinta); cursor: pointer; }
+.sakelar-tema:hover { background: var(--kertas-2); border-color: var(--amber); }
+.sakelar-tema:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+.sakelar-tema svg { width: 18px; height: 18px; }
+.sakelar-tema .ikon-matahari { display: none; }
+:root.dark .sakelar-tema .ikon-matahari { display: block; }
+:root.dark .sakelar-tema .ikon-bulan { display: none; }
