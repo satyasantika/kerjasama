@@ -90,14 +90,14 @@ it('admin_prodi hanya boleh mengubah kerja sama yang melibatkan prodinya', funct
     Livewire::test(EditKerjaSama::class, ['record' => $milikA->getRouteKey()])->assertSuccessful();
 });
 
-it('admin_fakultas dan super_admin boleh mengubah dan menghapus (soft) semua', function (Peran $peran) {
+it('admin_fakultas boleh mengubah dan menghapus (soft) semua', function (Peran $peran) {
     $user = peranUser($peran);
     $ks = ksDenganProdi(Prodi::factory()->create());
 
     expect($user->can('update', $ks))->toBeTrue()
         ->and($user->can('delete', $ks))->toBeTrue()
         ->and($user->can('forceDelete', $ks))->toBeFalse();
-})->with([Peran::SuperAdmin, Peran::AdminFakultas]);
+})->with([Peran::AdminFakultas]);
 
 it('pimpinan hanya bisa melihat', function () {
     $user = peranUser(Peran::Pimpinan);

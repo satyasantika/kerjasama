@@ -15,7 +15,7 @@ class RingkasanKerjaSama extends StatsOverviewWidget
 
     public static function canView(): bool
     {
-        return auth()->user()?->roles()->exists() ?? false;
+        return auth()->user()?->mengurusKerjaSama() ?? false;
     }
 
     protected function getStats(): array

@@ -11,7 +11,7 @@ class EvaluasiKerjaSamaPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->roles()->exists();
+        return $user->mengurusKerjaSama();
     }
 
     public function view(User $user, EvaluasiKerjaSama $evaluasi): bool
@@ -21,7 +21,7 @@ class EvaluasiKerjaSamaPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasAnyRole([Peran::SuperAdmin->value, Peran::AdminFakultas->value])
+        return $user->hasRole(Peran::AdminFakultas->value)
             || ($user->hasRole(Peran::AdminProdi->value) && $user->prodi_id !== null);
     }
 

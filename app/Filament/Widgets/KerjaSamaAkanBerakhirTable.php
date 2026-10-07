@@ -17,7 +17,7 @@ class KerjaSamaAkanBerakhirTable extends TableWidget
 
     public static function canView(): bool
     {
-        return auth()->user()?->roles()->exists() ?? false;
+        return auth()->user()?->mengurusKerjaSama() ?? false;
     }
 
     public function table(Table $table): Table

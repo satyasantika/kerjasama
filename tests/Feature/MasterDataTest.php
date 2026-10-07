@@ -42,15 +42,15 @@ it('seeder bentuk kerja sama berisi 41 baris dan idempoten', function () {
         ->and(BentukKerjaSama::whereNull('dharma_default')->count())->toBeGreaterThan(0);
 });
 
-it('mengizinkan semua peran melihat master', function (Peran $peran) {
+it('mengizinkan peran kerja sama melihat master', function (Peran $peran) {
     actingAs(userDengan($peran));
 
     Livewire::test(ListProdi::class)->assertSuccessful();
     Livewire::test(ListMitra::class)->assertSuccessful();
     Livewire::test(ListBentukKerjaSama::class)->assertSuccessful();
-})->with([Peran::SuperAdmin, Peran::AdminFakultas, Peran::AdminProdi, Peran::Pimpinan]);
+})->with([Peran::AdminFakultas, Peran::AdminProdi, Peran::Pimpinan]);
 
-it('hanya super_admin dan admin_fakultas yang boleh mengubah master', function (Peran $peran, bool $boleh) {
+it('hanya admin_fakultas yang boleh mengubah master', function (Peran $peran, bool $boleh) {
     $user = userDengan($peran);
 
     expect($user->can('create', Prodi::class))->toBe($boleh)
@@ -58,7 +58,7 @@ it('hanya super_admin dan admin_fakultas yang boleh mengubah master', function (
         ->and($user->can('create', BentukKerjaSama::class))->toBe($boleh)
         ->and($user->can('update', new Prodi))->toBe($boleh);
 })->with([
-    [Peran::SuperAdmin, true],
+    [Peran::SuperAdmin, false],
     [Peran::AdminFakultas, true],
     [Peran::AdminProdi, false],
     [Peran::Pimpinan, false],

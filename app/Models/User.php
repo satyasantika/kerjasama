@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\Peran;
 use Database\Factories\UserFactory;
 use Filament\Models\Contracts\FilamentUser;
 use Filament\Panel;
@@ -22,9 +23,24 @@ class User extends Authenticatable implements FilamentUser
     /** @use HasFactory<UserFactory> */
     use HasFactory, HasRoles, HasUuids, Notifiable;
 
+    protected $attributes = ['aktif' => true];
+
     public function canAccessPanel(Panel $panel): bool
     {
-        return $this->roles()->exists();
+        return $this->aktif && $this->roles()->exists();
+    }
+
+    /**
+     * Peran yang mengurus data kerja sama. Super Admin sengaja tidak termasuk:
+     * ia hanya mengelola pengguna dan pengaturan sistem.
+     */
+    public function mengurusKerjaSama(): bool
+    {
+        return $this->hasAnyRole([
+            Peran::AdminFakultas->value,
+            Peran::AdminProdi->value,
+            Peran::Pimpinan->value,
+        ]);
     }
 
     /**
@@ -41,6 +57,7 @@ class User extends Authenticatable implements FilamentUser
     {
         return [
             'email_verified_at' => 'datetime',
+            'aktif' => 'boolean',
             'password' => 'hashed',
         ];
     }

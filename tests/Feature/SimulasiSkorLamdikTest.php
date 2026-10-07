@@ -59,7 +59,7 @@ it('mengambil NDTPS dari tahun TS dan skor (b) dari rata-rata evaluasi', functio
         ->and($rekap->skorB(Prodi::factory()->create(), 2025))->toBeNull();
 });
 
-it('halaman simulasi dapat dibuka semua peran dan menghitung dari isian manual', function (Peran $peran) {
+it('halaman simulasi dapat dibuka peran kerja sama dan menghitung dari isian manual', function (Peran $peran) {
     actingAs(User::factory()->create()->assignRole($peran->value));
 
     $page = Livewire::test(SimulasiSkorLamdik::class)
@@ -68,7 +68,7 @@ it('halaman simulasi dapat dibuka semua peran dan menghitung dari isian manual',
 
     expect($page->get('hasil')['skor'])->toEqualWithDelta(3.1458, 0.00005)
         ->and($page->get('pesan'))->toBeNull();
-})->with(Peran::cases());
+})->with([Peran::AdminFakultas, Peran::AdminProdi, Peran::Pimpinan]);
 
 it('menampilkan pesan, bukan error, bila NDTPS nol', function () {
     actingAs(User::factory()->create()->assignRole(Peran::Pimpinan->value));

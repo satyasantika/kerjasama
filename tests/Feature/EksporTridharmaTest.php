@@ -137,7 +137,7 @@ it('mengunduh berkas xlsx lewat aksi di daftar realisasi', function (Peran $pera
         ->callAction('eksporTridharma', ['prodi_id' => $this->prodi->id, 'tahun_ts' => 2025])
         ->assertHasNoActionErrors()
         ->assertFileDownloaded('tabel-kerja-sama-tridharma-pmat-TS2025.xlsx');
-})->with(Peran::cases());
+})->with([Peran::AdminFakultas, Peran::AdminProdi, Peran::Pimpinan]);
 
 it('aksi ekspor mewajibkan prodi dan tahun TS', function () {
     actingAs(User::factory()->create()->assignRole(Peran::Pimpinan->value));

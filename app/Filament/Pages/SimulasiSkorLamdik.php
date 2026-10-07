@@ -45,7 +45,7 @@ class SimulasiSkorLamdik extends Page
 
     public static function canAccess(): bool
     {
-        return auth()->user()?->roles()->exists() ?? false;
+        return auth()->user()?->mengurusKerjaSama() ?? false;
     }
 
     public function mount(): void

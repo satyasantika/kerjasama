@@ -41,7 +41,7 @@ it('rekap memuat angka status, tingkat, jenis mitra, dan daftar', function () {
         ->and($data['kedaluwarsa']->pluck('id')->all())->toBe([$lewat->id]);
 });
 
-it('semua peran dapat mengunduh PDF rekap', function (Peran $peran) {
+it('peran yang mengurus kerja sama dapat mengunduh PDF rekap', function (Peran $peran) {
     ksRentang(-100, 20, ['judul' => 'Hampir Habis']);
     actingAs(User::factory()->create()->assignRole($peran->value));
 
@@ -50,7 +50,7 @@ it('semua peran dapat mengunduh PDF rekap', function (Peran $peran) {
     expect($respons->headers->get('content-type'))->toBe('application/pdf')
         ->and($respons->headers->get('content-disposition'))->toContain('rekap-kerja-sama-'.now()->format('Y-m-d').'.pdf')
         ->and(substr($respons->getContent(), 0, 5))->toBe('%PDF-');
-})->with(Peran::cases());
+})->with([Peran::AdminFakultas, Peran::AdminProdi, Peran::Pimpinan]);
 
 it('tamu dialihkan ke login dan pengguna tanpa peran ditolak', function () {
     get(route('laporan.rekap-pimpinan'))->assertRedirect(route('filament.admin.auth.login'));
