@@ -5,7 +5,7 @@ use App\Http\Controllers\BerkasKerjaSamaController;
 use App\Http\Controllers\LaporanPimpinanController;
 use Illuminate\Support\Facades\Route;
 
-Route::redirect('/', '/admin');
+Route::view('/', 'landing')->name('beranda');
 
 Route::middleware('auth')->group(function () {
     Route::get('/kerja-sama/{kerjaSama}/berkas/{jenis}', BerkasKerjaSamaController::class)
