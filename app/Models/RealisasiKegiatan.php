@@ -108,7 +108,7 @@ class RealisasiKegiatan extends Model
         $this->pastikanDiajukan();
 
         if (! $this->punyaLaporan()) {
-            throw new DomainException('Unggah minimal satu bukti berjenis laporan sebelum diverifikasi.');
+            throw new DomainException('Tambahkan minimal satu bukti berjenis laporan (tautan atau berkas) sebelum diverifikasi.');
         }
 
         $this->update([

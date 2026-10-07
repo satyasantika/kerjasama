@@ -10,6 +10,7 @@ use App\Enums\TingkatKerjaSama;
 use App\Models\KerjaSama;
 use App\Models\Mitra;
 use App\Models\Prodi;
+use App\Rules\TautanBerkasValid;
 use Carbon\Carbon;
 use Closure;
 use Filament\Forms\Components\DatePicker;
@@ -205,6 +206,20 @@ class KerjaSamaForm
     {
         return Step::make('Berkas')
             ->schema([
+                TextInput::make('tautan_dokumen')
+                    ->label('Tautan dokumen perjanjian (Google Drive)')
+                    ->helperText('Tempel tautan berbagi Google Drive PDF naskah bertanda tangan. Disarankan dibagikan terbatas pada akun unsil.ac.id.')
+                    ->url()
+                    ->maxLength(500)
+                    ->rule(new TautanBerkasValid)
+                    ->placeholder('https://drive.google.com/file/d/…'),
+                TextInput::make('tautan_dokumen_asing')
+                    ->label('Tautan dokumen versi bahasa asing (Google Drive)')
+                    ->helperText('Wajib dibuat bila ada pihak asing (Permendikbud 14/2014 Ps. 47 ay. 4).')
+                    ->url()
+                    ->maxLength(500)
+                    ->rule(new TautanBerkasValid)
+                    ->visible(fn (Get $get): bool => self::adaMitraAsing($get('mitra'))),
                 FileUpload::make('berkas_dokumen')
                     ->label('Dokumen perjanjian (PDF)')
                     ->disk('local')
@@ -214,7 +229,8 @@ class KerjaSamaForm
                     ->maxSize((int) config('kerjasama.maks_berkas_pdf_kb'))
                     ->openable(false)
                     ->downloadable(false)
-                    ->previewable(false),
+                    ->previewable(false)
+                    ->visible(fn (): bool => config('berkas.unggah_aktif')),
                 FileUpload::make('berkas_dokumen_asing')
                     ->label('Dokumen versi bahasa asing (PDF)')
                     ->helperText('Wajib dibuat bila ada pihak asing (Permendikbud 14/2014 Ps. 47 ay. 4).')
@@ -226,7 +242,7 @@ class KerjaSamaForm
                     ->openable(false)
                     ->downloadable(false)
                     ->previewable(false)
-                    ->visible(fn (Get $get): bool => self::adaMitraAsing($get('mitra'))),
+                    ->visible(fn (Get $get): bool => config('berkas.unggah_aktif') && self::adaMitraAsing($get('mitra'))),
             ]);
     }
 

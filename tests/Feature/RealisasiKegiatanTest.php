@@ -214,6 +214,7 @@ it('dharma terisi otomatis dari bentuk kerja sama dan tanggal selesai tidak bole
 
 it('mengunggah bukti PDF lewat relation manager dan menolak jenis berkas yang salah', function () {
     Storage::fake('local');
+    config(['berkas.unggah_aktif' => true]);
     $prodi = Prodi::factory()->create();
     $r = realisasiUntuk($prodi);
     actingAs(pengusul($prodi));
@@ -249,6 +250,7 @@ it('mengunggah bukti PDF lewat relation manager dan menolak jenis berkas yang sa
 
 it('foto bukti hanya JPG/PNG dan maksimal 5 MB', function () {
     Storage::fake('local');
+    config(['berkas.unggah_aktif' => true]);
     $prodi = Prodi::factory()->create();
     $r = realisasiUntuk($prodi);
     actingAs(pengusul($prodi));

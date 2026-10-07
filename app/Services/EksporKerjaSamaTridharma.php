@@ -110,6 +110,10 @@ class EksporKerjaSamaTridharma
         $nomor = $kerjaSama->nomor_dokumen_unsil ?: $kerjaSama->nomor_dokumen_mitra ?: $kerjaSama->judul;
         $bagian = ["{$kerjaSama->jenis_dokumen->value} {$nomor}"];
 
+        if (filled($kerjaSama->tautan_dokumen)) {
+            $bagian[] = route('tautan.kerja-sama', [$kerjaSama, 'dokumen']);
+        }
+
         if (filled($kerjaSama->berkas_dokumen)) {
             $bagian[] = route('kerja-sama.berkas', [$kerjaSama, 'dokumen']);
         }
