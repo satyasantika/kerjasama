@@ -21,6 +21,8 @@ class EditKerjaSama extends EditRecord
 
     protected function mutateFormDataBeforeFill(array $data): array
     {
+        $data['lingkup_mitra'] = $this->getRecord()->punyaMitraAsing() ? 'luar_negeri' : 'dalam_negeri';
+
         return $this->isiProdiVirtual($data);
     }
 

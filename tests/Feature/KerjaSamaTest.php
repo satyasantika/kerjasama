@@ -262,3 +262,90 @@ it('mitra asing wajib mengisi status legal', function () {
         ->call('create')
         ->assertHasFormErrors(['status_legal' => 'required']);
 });
+
+function dataIA(array $ubah = []): array
+{
+    return [
+        'jenis_dokumen' => 'IA', 'judul' => 'IA Uji', 'ruang_lingkup' => 'Pelaksanaan', 'bidang' => 'akademik',
+        'tingkat' => 'lokal', 'pihak_penandatangan_unsil' => 'dekan',
+        'tanggal_tanda_tangan' => '2026-02-01', 'tanggal_mulai' => '2026-02-01', 'tanggal_berakhir' => '2027-01-31',
+        ...$ubah,
+    ];
+}
+
+it('IA dalam negeri wajib memilih dasar kerja sama (dokumen induk)', function () {
+    $mitra = Mitra::factory()->create();
+    actingAs(peranUser(Peran::AdminFakultas));
+
+    Livewire::test(CreateKerjaSama::class)
+        ->fillForm(dataIA(['lingkup_mitra' => 'dalam_negeri', 'mitra' => [$mitra->id], 'induk_id' => null]))
+        ->call('create')
+        ->assertHasFormErrors(['induk_id' => 'required']);
+});
+
+it('IA dalam negeri tersimpan dengan induk dan mitra/prodi terisi dari induk', function () {
+    $mitra = Mitra::factory()->create();
+    $prodi = Prodi::factory()->create();
+    $induk = KerjaSama::factory()->create(['jenis_dokumen' => 'MoU']);
+    $induk->mitra()->sync([$mitra->id]);
+    $induk->prodi()->sync([$prodi->id => ['penginisiasi' => false]]);
+    actingAs(peranUser(Peran::AdminFakultas));
+
+    Livewire::test(CreateKerjaSama::class)
+        ->fillForm(['jenis_dokumen' => 'IA', 'lingkup_mitra' => 'dalam_negeri'])
+        ->fillForm(['induk_id' => $induk->id])
+        ->assertFormSet(['mitra' => [$mitra->id], 'prodi_ids' => [$prodi->id]])
+        ->fillForm(dataIA(['induk_id' => $induk->id]))
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $ia = KerjaSama::firstWhere('judul', 'IA Uji');
+    expect($ia->induk_id)->toBe($induk->id)
+        ->and($ia->mitra->pluck('id')->all())->toBe([$mitra->id]);
+});
+
+it('IA luar negeri tidak menanyakan dasar kerja sama', function () {
+    $asing = Mitra::factory()->asing()->create();
+    actingAs(peranUser(Peran::AdminFakultas));
+
+    Livewire::test(CreateKerjaSama::class)
+        ->fillForm(['jenis_dokumen' => 'IA', 'lingkup_mitra' => 'luar_negeri'])
+        ->assertFormFieldHidden('induk_id')
+        ->fillForm(dataIA(['lingkup_mitra' => 'luar_negeri', 'mitra' => [$asing->id], 'pihak_penandatangan_unsil' => 'rektor']))
+        ->call('create')
+        ->assertHasNoFormErrors();
+
+    $ia = KerjaSama::firstWhere('judul', 'IA Uji');
+    expect($ia->induk_id)->toBeNull()
+        ->and($ia->tingkat->value)->toBe('internasional');
+});
+
+it('lingkup luar negeri tanpa mitra luar negeri tidak dapat dipakai untuk menghindari dasar kerja sama', function () {
+    $lokal = Mitra::factory()->create();
+    actingAs(peranUser(Peran::AdminFakultas));
+
+    Livewire::test(CreateKerjaSama::class)
+        ->fillForm(dataIA(['lingkup_mitra' => 'luar_negeri', 'mitra' => [$lokal->id]]))
+        ->call('create')
+        ->assertHasFormErrors(['mitra']);
+});
+
+it('memilih mitra luar negeri pada IA otomatis mengubah lingkup menjadi luar negeri', function () {
+    $asing = Mitra::factory()->asing()->create();
+    actingAs(peranUser(Peran::AdminFakultas));
+
+    Livewire::test(CreateKerjaSama::class)
+        ->fillForm(['jenis_dokumen' => 'IA', 'lingkup_mitra' => 'dalam_negeri'])
+        ->fillForm(['mitra' => [$asing->id]])
+        ->assertFormSet(['lingkup_mitra' => 'luar_negeri']);
+});
+
+it('dokumen selain IA tidak wajib memiliki induk', function () {
+    $mitra = Mitra::factory()->create();
+    actingAs(peranUser(Peran::AdminFakultas));
+
+    Livewire::test(CreateKerjaSama::class)
+        ->fillForm(dataIA(['jenis_dokumen' => 'MoA', 'mitra' => [$mitra->id]]))
+        ->call('create')
+        ->assertHasNoFormErrors();
+});

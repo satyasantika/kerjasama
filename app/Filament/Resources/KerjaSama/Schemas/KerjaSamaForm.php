@@ -11,8 +11,10 @@ use App\Models\KerjaSama;
 use App\Models\Mitra;
 use App\Models\Prodi;
 use Carbon\Carbon;
+use Closure;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Radio;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -42,14 +44,52 @@ class KerjaSamaForm
         return Step::make('Identitas dokumen')
             ->columns(2)
             ->schema([
-                Select::make('jenis_dokumen')->label('Jenis dokumen')->options(JenisDokumen::class)->required(),
+                Select::make('jenis_dokumen')->label('Jenis dokumen')->options(JenisDokumen::class)->required()->live(),
+                Radio::make('lingkup_mitra')
+                    ->label('Lingkup mitra')
+                    ->options(['dalam_negeri' => 'Dalam negeri', 'luar_negeri' => 'Luar negeri'])
+                    ->default('dalam_negeri')
+                    ->inline()
+                    ->live()
+                    ->dehydrated(false)
+                    ->visible(fn (Get $get): bool => self::adalahIA($get))
+                    ->afterStateUpdated(function (Set $set, $state) {
+                        if ($state === 'luar_negeri') {
+                            $set('induk_id', null);
+                        }
+                    })
+                    ->helperText('Dalam negeri: dasar kerja sama (dokumen induk) wajib diisi. Luar negeri: tidak ditanyakan.'),
                 Select::make('induk_id')
-                    ->label('Dokumen induk')
-                    ->helperText('Isi bila ini dokumen turunan (mis. MoA/IA di bawah MoU).')
-                    ->relationship('induk', 'judul', fn ($query, ?KerjaSama $record) => $query->when($record, fn ($q) => $q->whereKeyNot($record->getKey())))
+                    ->label(fn (Get $get): string => self::adalahIA($get) ? 'Dasar kerja sama (dokumen induk)' : 'Dokumen induk')
+                    ->helperText(fn (Get $get): string => self::adalahIA($get)
+                        ? 'Pilih MoU/MoA/PKS yang menjadi dasar IA ini. Mitra dan prodi terisi otomatis dari dokumen tersebut.'
+                        : 'Isi bila ini dokumen turunan (mis. MoA di bawah MoU).')
+                    ->relationship('induk', 'judul', fn ($query, ?KerjaSama $record) => $query
+                        ->where('jenis_dokumen', '!=', JenisDokumen::IA->value)
+                        ->when($record, fn ($q) => $q->whereKeyNot($record->getKey())))
                     ->searchable()
                     ->preload()
-                    ->live(),
+                    ->live()
+                    ->visible(fn (Get $get): bool => ! self::adalahIA($get)
+                        || $get('lingkup_mitra') !== 'luar_negeri'
+                        || filled($get('induk_id')))
+                    ->required(fn (Get $get): bool => self::adalahIA($get) && $get('lingkup_mitra') !== 'luar_negeri')
+                    ->afterStateUpdated(function (Get $get, Set $set, $state) {
+                        if (! self::adalahIA($get) || blank($state)) {
+                            return;
+                        }
+
+                        $induk = KerjaSama::with(['mitra', 'prodi'])->find($state);
+
+                        if ($induk === null) {
+                            return;
+                        }
+
+                        $set('mitra', $induk->mitra->pluck('id')->all());
+                        $set('prodi_ids', $induk->prodi->pluck('id')->all());
+                        $set('tingkat', $induk->tingkat->value);
+                        $set('bidang', $induk->bidang->value);
+                    }),
                 TextInput::make('nomor_dokumen_unsil')->label('Nomor dokumen Unsil')->maxLength(255),
                 TextInput::make('nomor_dokumen_mitra')->label('Nomor dokumen mitra')->maxLength(255),
                 TextInput::make('judul')->label('Judul')->required()->maxLength(255)->columnSpanFull(),
@@ -85,10 +125,20 @@ class KerjaSamaForm
                     ->preload()
                     ->required()
                     ->live()
+                    ->rule(fn (Get $get): Closure => function (string $attribute, $value, Closure $gagal) use ($get) {
+                        if (self::adalahIA($get) && $get('lingkup_mitra') === 'luar_negeri' && ! self::adaMitraAsing($value)) {
+                            $gagal('IA luar negeri harus memiliki minimal satu mitra luar negeri. Ganti lingkup ke dalam negeri bila mitranya di Indonesia.');
+                        }
+                    })
                     ->afterStateUpdated(function (Get $get, Set $set, $state) {
                         if (self::adaMitraAsing($state)) {
                             $set('tingkat', TingkatKerjaSama::Internasional->value);
                             $set('perlu_persetujuan_dirjen', true);
+
+                            if (self::adalahIA($get)) {
+                                $set('lingkup_mitra', 'luar_negeri');
+                                $set('induk_id', null);
+                            }
                         }
                     })
                     ->columnSpanFull(),
@@ -178,6 +228,13 @@ class KerjaSamaForm
                     ->previewable(false)
                     ->visible(fn (Get $get): bool => self::adaMitraAsing($get('mitra'))),
             ]);
+    }
+
+    private static function adalahIA(Get $get): bool
+    {
+        $jenis = $get('jenis_dokumen');
+
+        return ($jenis instanceof JenisDokumen ? $jenis : JenisDokumen::tryFrom((string) $jenis)) === JenisDokumen::IA;
     }
 
     /** @param  array<int|string>|null  $mitraIds */
