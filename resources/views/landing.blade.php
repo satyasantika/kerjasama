@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Sistem Kerja Sama FKIP Universitas Siliwangi</title>
     <meta name="description" content="Pengelolaan dokumen kerja sama (MoU, MoA, PKS, IA) FKIP Universitas Siliwangi: masa berlaku, realisasi kegiatan, verifikasi, dan data akreditasi LAMDIK IAPSK 3.0 dalam satu sistem.">
-    <link rel="icon" href="/favicon.ico">
-    <link rel="stylesheet" href="/fonts/filament/filament/inter/index.css">
+    <link rel="icon" href="{{ url('/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ url('/fonts/filament/filament/inter/index.css') }}">
     <style>
         :root {
             --kertas: #fbf8f2;
@@ -163,7 +163,7 @@
 
 <header class="atas">
     <div class="wrap">
-        <a class="merek" href="/">
+        <a class="merek" href="{{ url('/') }}">
             <i aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="#1c1917" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5"/><path d="m9 14 2 2 4-4"/></svg></i>
             Kerja Sama FKIP
         </a>
@@ -171,7 +171,7 @@
             <a href="#fitur">Fitur</a>
             <a href="#masa-berlaku">Masa berlaku</a>
             <a href="#peran">Peran</a>
-            <a href="/panduan/">Panduan</a>
+            <a href="{{ url('/panduan/') }}">Panduan</a>
             <a class="tombol utama" href="{{ url('/admin') }}">{{ auth()->check() ? 'Buka dasbor' : 'Masuk' }}</a>
         </nav>
     </div>
@@ -187,7 +187,7 @@
                 <p class="lead">Satu tempat untuk menyimpan MoU, MoA, PKS, dan IA bersama mitra, memantau masa berlakunya, mencatat kegiatan yang sudah terlaksana, dan menyiapkan data akreditasi LAMDIK IAPSK 3.0.</p>
                 <div class="aksi">
                     <a class="tombol utama" href="{{ url('/admin') }}">{{ auth()->check() ? 'Buka dasbor' : 'Masuk ke sistem' }} →</a>
-                    <a class="tombol garis" href="/panduan/">Baca panduan pengguna</a>
+                    <a class="tombol garis" href="{{ url('/panduan/') }}">Baca panduan pengguna</a>
                 </div>
                 <div class="fakta">
                     <span><b>4</b> jenis dokumen</span>
@@ -198,7 +198,7 @@
             </div>
             <div class="bingkai" aria-hidden="false">
                 <div class="bar"><i></i><i></i><i></i><span>Dasbor · Kerja Sama FKIP</span></div>
-                <img src="/panduan/img/landing-dasbor.png" width="1680" height="1000" alt="Dasbor sistem: ringkasan kerja sama aktif, akan berakhir, dan kedaluwarsa, disertai grafik per tingkat dan jenis mitra." fetchpriority="high">
+                <img src="{{ url('/panduan/img/landing-dasbor.png') }}" width="1680" height="1000" alt="Dasbor sistem: ringkasan kerja sama aktif, akan berakhir, dan kedaluwarsa, disertai grafik per tingkat dan jenis mitra." fetchpriority="high">
             </div>
         </div>
     </div>
@@ -289,21 +289,21 @@
             <h2>Empat peran, satu panduan masing-masing</h2>
             <p class="pengantar">Pilih peran Anda untuk melihat panduan bergambar langkah demi langkah.</p>
             <div class="peran">
-                <a href="/panduan/pimpinan.html">
+                <a href="{{ url('/panduan/pimpinan.html') }}">
                     <span class="lencana hijau" style="align-self:flex-start">Pimpinan</span>
                     <h3>Dekan, wakil dekan, kaprodi</h3>
                     <p>Memantau kondisi kerja sama dan mengunduh rekap untuk pengambilan keputusan.</p>
                     <ul><li>Dasbor &amp; grafik</li><li>Rekap PDF</li><li>Hanya baca</li></ul>
                     <span class="menuju">Buka panduan →</span>
                 </a>
-                <a href="/panduan/admin-prodi.html">
+                <a href="{{ url('/panduan/admin-prodi.html') }}">
                     <span class="lencana biru" style="align-self:flex-start">Admin Prodi</span>
                     <h3>Operator / GKM prodi</h3>
                     <p>Mencatat kerja sama dan realisasi kegiatan yang melibatkan program studinya.</p>
                     <ul><li>Buat kerja sama</li><li>Lapor realisasi &amp; bukti</li><li>Ekspor Tridharma</li></ul>
                     <span class="menuju">Buka panduan →</span>
                 </a>
-                <a href="/panduan/admin-fakultas.html">
+                <a href="{{ url('/panduan/admin-fakultas.html') }}">
                     <span class="lencana kuning" style="align-self:flex-start">Admin Fakultas</span>
                     <h3>Staf urusan kerja sama</h3>
                     <p>Mengelola seluruh data, master mitra dan prodi, serta memverifikasi realisasi.</p>
@@ -334,7 +334,7 @@
             </div>
             <div class="bingkai">
                 <div class="bar"><i></i><i></i><i></i><span>Simulasi Skor LAMDIK</span></div>
-                <img src="/panduan/img/landing-lamdik.png" width="1680" height="1000" alt="Halaman simulasi skor elemen Kerja Sama Tridharma LAMDIK IAPSK 3.0.">
+                <img src="{{ url('/panduan/img/landing-lamdik.png') }}" width="1680" height="1000" alt="Halaman simulasi skor elemen Kerja Sama Tridharma LAMDIK IAPSK 3.0.">
             </div>
         </div>
     </section>
@@ -346,7 +346,7 @@
             <p>Belum punya akun? Hubungi admin fakultas atau operator TI untuk dibuatkan akun sesuai peran Anda.</p>
             <div class="aksi">
                 <a class="tombol utama" href="{{ url('/admin') }}">{{ auth()->check() ? 'Buka dasbor' : 'Masuk ke sistem' }} →</a>
-                <a class="tombol garis" href="/panduan/">Panduan pengguna</a>
+                <a class="tombol garis" href="{{ url('/panduan/') }}">Panduan pengguna</a>
             </div>
         </div>
     </section>
