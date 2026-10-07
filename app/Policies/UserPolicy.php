@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Actions\Pengguna\MulaiMenyamar;
 use App\Enums\Peran;
 use App\Models\User;
 
@@ -34,6 +35,19 @@ class UserPolicy
     public function update(User $user, User $model): bool
     {
         return $this->kelola($user);
+    }
+
+    /**
+     * Masuk sebagai pengguna lain (bukan Super Admin) untuk bantuan/uji peran.
+     * Tidak boleh bertingkat, tidak boleh ke diri sendiri atau akun nonaktif.
+     */
+    public function impersonate(User $user, User $model): bool
+    {
+        return $this->kelola($user)
+            && ! session()->has(MulaiMenyamar::KUNCI_SESI)
+            && ! $user->is($model)
+            && $model->aktif
+            && $model->mengurusKerjaSama();
     }
 
     public function delete(User $user, User $model): bool

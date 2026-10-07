@@ -2,8 +2,13 @@
 
 namespace App\Filament\Resources\Pengguna\Tables;
 
+use App\Actions\Pengguna\MulaiMenyamar;
 use App\Enums\Peran;
+use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
+use Filament\Facades\Filament;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -39,6 +44,19 @@ class PenggunaTable
                 TernaryFilter::make('aktif')->label('Aktif'),
             ])
             ->recordActions([
+                Action::make('menyamar')
+                    ->label('Masuk sebagai')
+                    ->icon(Heroicon::OutlinedUserCircle)
+                    ->color('gray')
+                    ->visible(fn (User $record): bool => auth()->user()?->can('impersonate', $record) ?? false)
+                    ->requiresConfirmation()
+                    ->modalHeading(fn (User $record): string => "Masuk sebagai {$record->name}?")
+                    ->modalDescription('Anda akan melihat dan bertindak sebagai pengguna ini. Gunakan tombol "Kembali ke akun saya" untuk mengakhiri.')
+                    ->action(function (User $record) {
+                        app(MulaiMenyamar::class)->handle(auth()->user(), $record);
+
+                        return redirect()->to(Filament::getUrl());
+                    }),
                 EditAction::make(),
             ]);
     }
