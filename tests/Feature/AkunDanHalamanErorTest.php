@@ -1,10 +1,13 @@
 <?php
 
 use App\Enums\Peran;
+use App\Filament\Auth\EditProfil;
 use App\Models\User;
 use Database\Seeders\RolSeeder;
 use Filament\Auth\Pages\EditProfile;
 use Filament\Facades\Filament;
+use Illuminate\Auth\Events\OtherDeviceLogout;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Hash;
 use Livewire\Livewire;
 
@@ -87,4 +90,34 @@ it('setiap halaman panduan statis memiliki sakelar tema', function () {
     foreach (glob(public_path('panduan/*.html')) as $berkas) {
         expect(file_get_contents($berkas))->toContain('data-sakelar-tema');
     }
+});
+
+it('pengguna dengan wajib_ganti_sandi diarahkan ke profil', function () {
+    $user = User::factory()->create(['wajib_ganti_sandi' => true])->assignRole(Peran::AdminProdi->value);
+
+    actingAs($user)->get('/admin')->assertRedirect(Filament::getProfileUrl());
+});
+
+it('mengganti sandi di profil mencabut kewajiban dan mengeluarkan perangkat lain', function () {
+    $user = User::factory()->create(['password' => 'lama-12345', 'wajib_ganti_sandi' => true])->assignRole(Peran::AdminProdi->value);
+    Event::fake([OtherDeviceLogout::class]);
+    actingAs($user);
+
+    Livewire::test(EditProfil::class)
+        ->fillForm([
+            'name' => $user->name,
+            'email' => $user->email,
+            'password' => 'baru-67890-Aa',
+            'passwordConfirmation' => 'baru-67890-Aa',
+            'currentPassword' => 'lama-12345',
+        ])
+        ->call('save')
+        ->assertHasNoFormErrors();
+
+    $user->refresh();
+    expect($user->wajib_ganti_sandi)->toBeFalse()
+        ->and(Hash::check('baru-67890-Aa', $user->password))->toBeTrue();
+    Event::assertDispatched(OtherDeviceLogout::class);
+
+    get('/admin')->assertOk();
 });
