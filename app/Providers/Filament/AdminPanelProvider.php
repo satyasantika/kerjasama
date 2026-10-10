@@ -3,8 +3,10 @@
 namespace App\Providers\Filament;
 
 use App\Actions\Pengguna\MulaiMenyamar;
+use App\Filament\Auth\EditProfil;
 use App\Filament\Pages\Auth\Login;
 use App\Filament\Pages\Dashboard;
+use App\Http\Middleware\PaksaGantiSandi;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -30,7 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->id('admin')
             ->path('admin')
             ->login(Login::class)
-            ->profile(isSimple: false)
+            ->profile(EditProfil::class, isSimple: false)
             ->brandName('Kerja Sama FKIP')
             ->renderHook(PanelsRenderHook::BODY_START, fn () => session()->has(MulaiMenyamar::KUNCI_SESI) ? view('filament.penyamaran.spanduk') : '')
             ->renderHook(PanelsRenderHook::HEAD_END, fn () => view('filament.auth.login-gaya'), scopes: Login::class)
@@ -62,6 +64,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
+                PaksaGantiSandi::class,
             ]);
     }
 }

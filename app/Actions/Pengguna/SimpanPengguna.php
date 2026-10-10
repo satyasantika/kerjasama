@@ -12,7 +12,7 @@ class SimpanPengguna
     /**
      * Buat atau ubah pengguna beserta perannya.
      *
-     * @param  array{name: string, email: string, password?: ?string, peran: string|Peran, prodi_id?: ?string, aktif?: bool}  $data
+     * @param  array{name: string, email: string, password?: ?string, peran: string|Peran, prodi_id?: ?string, aktif?: bool, wajib_ganti_sandi?: bool}  $data
      */
     public function handle(?User $pengguna, array $data, User $pelaku): User
     {
@@ -40,7 +40,7 @@ class SimpanPengguna
                 $pengguna->password = $data['password'];
             }
 
-            $pengguna->forceFill(['prodi_id' => $prodiId, 'aktif' => $aktif])->save();
+            $pengguna->forceFill(['prodi_id' => $prodiId, 'aktif' => $aktif, 'wajib_ganti_sandi' => (bool) ($data['wajib_ganti_sandi'] ?? false)])->save();
             $pengguna->syncRoles([$peran->value]);
 
             return $pengguna;

@@ -53,6 +53,10 @@ class PenggunaForm
                 ->label('Akun aktif')
                 ->helperText('Akun nonaktif tidak dapat masuk ke sistem.')
                 ->default(true),
+            Toggle::make('wajib_ganti_sandi')
+                ->label('Wajib ganti sandi saat masuk')
+                ->helperText('Nyalakan untuk akun dengan kata sandi awal yang dibuat admin.')
+                ->default(false),
         ]);
     }
 
