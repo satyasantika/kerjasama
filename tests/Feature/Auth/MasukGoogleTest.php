@@ -164,6 +164,16 @@ it('kembali ke asal bila asal berada di dalam aplikasi, mengabaikan asal di luar
     withSession(['google_asal' => 'https://evil.example/'])
         ->get(route('auth.google.callback', ['error' => 'access_denied']))
         ->assertRedirect(urlMasuk());
+
+    withSession(['google_asal' => rtrim(url('/'), '/').'.evil.example/'])
+        ->get(route('auth.google.callback', ['error' => 'access_denied']))
+        ->assertRedirect(route('filament.admin.auth.login'));
+});
+
+it('tetap mengarahkan ke Google bila asal bukan string', function () {
+    get(route('auth.google.redirect', ['asal' => ['x']]))
+        ->assertRedirect()
+        ->assertSessionMissing('galat_google');
 });
 
 it('pengguna yang sudah masuk langsung diarahkan', function () {
