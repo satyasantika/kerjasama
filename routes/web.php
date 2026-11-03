@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AkhiriMenyamarController;
+use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\BerkasBuktiController;
 use App\Http\Controllers\BerkasKerjaSamaController;
 use App\Http\Controllers\LaporanPimpinanController;
@@ -8,6 +9,11 @@ use App\Http\Controllers\TautanBerkasController;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'landing')->name('beranda');
+
+Route::prefix('auth/google')->middleware('throttle:google-login')->group(function () {
+    Route::get('redirect', [GoogleAuthController::class, 'redirect'])->name('auth.google.redirect');
+    Route::get('callback', [GoogleAuthController::class, 'callback'])->name('auth.google.callback');
+});
 
 Route::middleware('auth')->group(function () {
     Route::post('/menyamar/akhiri', AkhiriMenyamarController::class)->name('menyamar.akhiri');
