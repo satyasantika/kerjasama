@@ -42,7 +42,7 @@ class AppServiceProvider extends ServiceProvider
             URL::forceScheme('https');
         }
 
-        RateLimiter::for('google-login', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
+        RateLimiter::for('google-login', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));
 
         FilamentView::registerRenderHook(
             PanelsRenderHook::AUTH_LOGIN_FORM_AFTER,

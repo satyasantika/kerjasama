@@ -176,16 +176,39 @@ it('tetap mengarahkan ke Google bila asal bukan string', function () {
         ->assertSessionMissing('galat_google');
 });
 
+it('redirect_uri tetap bawaan bila GOOGLE_REDIRECT_URI kosong', function () {
+    putenv('GOOGLE_REDIRECT_URI=');
+    $_ENV['GOOGLE_REDIRECT_URI'] = $_SERVER['GOOGLE_REDIRECT_URI'] = '';
+
+    try {
+        config(['services.google.redirect' => (require config_path('services.php'))['google']['redirect']]);
+    } finally {
+        putenv('GOOGLE_REDIRECT_URI');
+        unset($_ENV['GOOGLE_REDIRECT_URI'], $_SERVER['GOOGLE_REDIRECT_URI']);
+    }
+
+    $lokasi = get(route('auth.google.redirect'))->assertRedirect()->headers->get('Location');
+
+    parse_str(parse_url($lokasi, PHP_URL_QUERY), $q);
+    expect($q['redirect_uri'])->toBe(route('auth.google.callback'));
+});
+
+it('mengabaikan asal bukan string di sesi', function () {
+    withSession(['google_asal' => ['x']])
+        ->get(route('auth.google.callback', ['error' => 'access_denied']))
+        ->assertRedirect(route('filament.admin.auth.login'));
+});
+
 it('pengguna yang sudah masuk langsung diarahkan', function () {
     actingAs(penggunaBerperan())
         ->get(route('auth.google.redirect'))
         ->assertRedirect(urlPanel());
 });
 
-it('membatasi 10 permintaan per menit per IP', function () {
+it('membatasi 60 permintaan per menit per IP', function () {
     googleSebagai('x@gmail.com', ['email_verified' => false]);
 
-    foreach (range(1, 10) as $i) {
+    foreach (range(1, 60) as $i) {
         get(route('auth.google.callback'));
     }
 
